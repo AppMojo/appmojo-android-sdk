@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+
+android {
+    lintOptions {
+        abortOnError false
+        absolutePaths false
+        lintConfig file("lint.xml")
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        applicationId "net.appsynth.appmojoandroidsdk"
+        minSdkVersion 9
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
+    compile project(':appmojo-sdk')
+
+    //************************   FOR UNIT TEST ONLY   ************************//
+    // Espresso
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2')
+
+    androidTestCompile 'com.android.support.test:runner:0.3'
+//    androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
+
+    //Google Play Services
+//    testCompile 'com.google.android.gms:play-services-ads:7.5.0'
+
+    //Mockito
+    testCompile "org.mockito:mockito-core:1.10.19"
+
+    // Robolectric
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-core:1.1'
+    testCompile 'org.hamcrest:hamcrest-library:1.1'
+    testCompile 'org.hamcrest:hamcrest-integration:1.1'
+    androidTestCompile 'com.android.support:support-v4:22.2.1'
+
+
+
+    testCompile ("org.robolectric:robolectric:3.0") {
+        exclude module: 'classworlds'
+        exclude module: 'commons-logging'
+        exclude module: 'httpclient'
+        exclude module: 'maven-artifact'
+        exclude module: 'maven-artifact-manager'
+        exclude module: 'maven-error-diagnostics'
+        exclude module: 'maven-model'
+        exclude module: 'maven-project'
+        exclude module: 'maven-settings'
+        exclude module: 'plexus-container-default'
+        exclude module: 'plexus-interpolation'
+        exclude module: 'plexus-utils'
+        exclude module: 'wagon-file'
+        exclude module: 'wagon-http-lightweight'
+        exclude module: 'wagon-provider-api'
+    }
+}

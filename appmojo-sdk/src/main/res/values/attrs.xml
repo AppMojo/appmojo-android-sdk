@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <attr name="AMAdSize">
+        <enum name="BANNER" value="0" />
+        <enum name="LARGE_BANNER" value="1" />
+        <enum name="FULL_BANNER" value="2" />
+        <enum name="LEADER_BOARD" value="3" />
+        <enum name="MEDIUM_RECTANGLE" value="4" />
+        <enum name="WIDE_SKYSCRAPER" value="5" />
+        <enum name="SMART_BANNER" value="6" />
+    </attr>
+
+    <declare-styleable name="AppMojo">
+        <attr name="AMAdSize" />
+        <attr name="AMPlacementId" format="string"/>
+    </declare-styleable>
+</resources>

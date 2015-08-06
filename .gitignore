@@ -36,3 +36,4 @@ proguard/
 *.iml
 .idea
 build
+*/src/test/*
