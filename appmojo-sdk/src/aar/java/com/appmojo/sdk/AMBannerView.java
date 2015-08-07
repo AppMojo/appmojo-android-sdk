@@ -2,6 +2,10 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +24,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private AMController mAMController;
     private String mPlacementUid;
     private AMListener mListener;
-    private AMAdSize mAdSize;
+    private AMAdSize mAdSize = AMAdSize.BANNER;
     private Context mContext;
 
     public AMBannerView(Context context) {
@@ -131,19 +135,25 @@ public class AMBannerView extends ViewGroup implements AMView {
         }
 
         if (isInEditMode()) {
+            FrameLayout frame = new FrameLayout(context);
             TextView textView = new TextView(context);
             textView.setGravity(17);
+            textView.setTextColor(0xff512DA8);
             textView.setText("Ads by AppMojo");
-            textView.setTextColor(mContext.getResources().getColor(R.color.mojo_color_gray));
-            textView.setBackgroundColor(mContext.getResources().getColor(R.color.mojo_color_magenta));
 
-            FrameLayout frame = new FrameLayout(context);
-            frame.setBackgroundColor(mContext.getResources().getColor(R.color.mojo_color_dark_gray));
+            ShapeDrawable shapeDrawable = new ShapeDrawable(new RectShape());
+            shapeDrawable.getPaint().setColor(0xFF512DA8);
+            shapeDrawable.getPaint().setStyle(Paint.Style.STROKE);
+            shapeDrawable.getPaint().setStrokeWidth(5);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                textView.setBackgroundDrawable(shapeDrawable);
+            } else {
+                textView.setBackground(shapeDrawable);
+            }
 
             int[] sizePixels = AMAdSize.getAdSizePixel(mContext, getAdSize());
             frame.addView(textView, new FrameLayout.LayoutParams(
                     sizePixels[0], sizePixels[1], Gravity.CENTER));
-
             this.addView(frame, sizePixels[0], sizePixels[1]);
         }
     }
