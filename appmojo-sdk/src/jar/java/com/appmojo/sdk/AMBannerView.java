@@ -127,6 +127,7 @@ public class AMBannerView extends ViewGroup implements AMView {
             shapeDrawable.getPaint().setStyle(Paint.Style.STROKE);
             shapeDrawable.getPaint().setStrokeWidth(5);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                //noinspection deprecation
                 textView.setBackgroundDrawable(shapeDrawable);
             } else {
                 textView.setBackground(shapeDrawable);
