@@ -28,26 +28,26 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     public AMBannerView(Context context) {
         super(context);
-        initView(context, null, -1);
+        initView(context);
     }
 
     public AMBannerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context, attrs, -1);
+        initView(context);
     }
 
     public AMBannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context, attrs, defStyleAttr);
+        initView(context);
     }
 
 
-    private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
+    private void initView(Context context) {
         mContext = context;
         if (!isInEditMode()) {
             mAMController = AMViewControllerFactory.create(mContext, this, AMAdType.BANNER);
         }
-        initPreview(context, attrs, defStyleAttr);
+        initPreview(context);
 
     }
 
@@ -114,7 +114,7 @@ public class AMBannerView extends ViewGroup implements AMView {
         destroy();
     }
 
-    private void initPreview(Context context, AttributeSet attrs, int defStyleAttr) {
+    private void initPreview(Context context) {
         if (isInEditMode()) {
             FrameLayout frame = new FrameLayout(context);
             TextView textView = new TextView(context);
@@ -154,8 +154,8 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int childW = 0;
-        int childH = 0;
+        int childW;
+        int childH;
         View child = this.getChildAt(0);
         if (child != null && child.getVisibility() != GONE) {
             this.measureChild(child, widthMeasureSpec, heightMeasureSpec);

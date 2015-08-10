@@ -173,8 +173,8 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int childW = 0;
-        int childH = 0;
+        int childW;
+        int childH;
         View child = this.getChildAt(0);
         if (child != null && child.getVisibility() != GONE) {
             this.measureChild(child, widthMeasureSpec, heightMeasureSpec);

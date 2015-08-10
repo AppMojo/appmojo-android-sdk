@@ -48,16 +48,17 @@ class AMInterstitialController  extends AMController {
         try {
             mCustomAdRequest = getApplyAdRequest(adRequest);
             if(mCustomAdRequest != null) {
-                className = AMClassFactory.getClassName(
-                        mCustomAdRequest.getAdNetwork(), AMAdType.INTERSTITIAL);
+                className = AMClassFactory.getClassName(mCustomAdRequest.getAdNetwork(), AMAdType.INTERSTITIAL);
                 mCustomInterstitial = AMCustomInterstitialFactory.create(className);
                 applyAdRequest(mCustomAdRequest);
             } else {
                 AMLog.d("Cannot load Interstitial because it has no configuration to be applied.");
+                notifyNotApplyConfiguration();
             }
         } catch (Exception e) {
             mCustomInterstitial = null;
             AMLog.e("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
+            notifyNotApplyConfiguration();
         }
 
     }
@@ -73,11 +74,11 @@ class AMInterstitialController  extends AMController {
         AMLog.d("Apply interstitial configuration...");
         if(mCustomInterstitial != null) {
             mCustomInterstitial.invalidate();
-
             if (adRequest != null && adRequest instanceof AMInterstitialAdRequest) {
                 mCustomInterstitial.loadInterstitial(mContext, mCustomListener, (AMInterstitialAdRequest) adRequest);
             } else {
                 AMLog.d("Cannot load interstitial ad because it has no configuration to be applied.");
+                notifyNotApplyConfiguration();
             }
         } else {
             AMLog.d("Cannot load interstitial ad. Have you ever called method loadAd()?");
@@ -99,6 +100,16 @@ class AMInterstitialController  extends AMController {
             mCustomInterstitial.show();
         } else {
             AMLog.d("Tried to show a interstitial ad before it finished loading. Please try again.");
+        }
+    }
+
+
+    private void notifyNotApplyConfiguration() {
+        if(getAMView() != null) {
+            AMListener listener = getAMView().getListener();
+            if (listener != null) {
+                ((AMInterstitialListener) listener).onNotApplyConfiguration(mAMInterstitial);
+            }
         }
     }
 

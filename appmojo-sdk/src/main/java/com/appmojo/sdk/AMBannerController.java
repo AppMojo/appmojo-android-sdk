@@ -26,12 +26,14 @@ class AMBannerController extends AMController {
         mHandler = new Handler();
     }
 
+
     public int getRefreshRate() {
         if(mCustomAdRequest != null && mCustomAdRequest instanceof AMBannerAdRequest) {
             return ((AMBannerAdRequest)mCustomAdRequest).getRefreshRate();
         }
         return 0;
     }
+
 
     @Override
     public void loadAd(AMAdRequest adRequest) {
@@ -41,19 +43,21 @@ class AMBannerController extends AMController {
         try {
             mCustomAdRequest = getApplyAdRequest(mAdRequest);
             if(mCustomAdRequest != null) {
-                className = AMClassFactory.getClassName(
-                        mCustomAdRequest.getAdNetwork(), AMAdType.BANNER);
+                className = AMClassFactory.getClassName(mCustomAdRequest.getAdNetwork(), AMAdType.BANNER);
                 mCustomBanner = AMCustomBannerFactory.create(className);
                 applyAdRequest(mCustomAdRequest);
             } else {
-                AMLog.d("Banner cannot load because no configuration to apply.");
+                AMLog.d("Cannot load banner because it has no configuration to be applied.");
+                notifyNotApplyConfiguration();
             }
         } catch (Exception e) {
             mCustomBanner = null;
-            AMLog.d("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
+            AMLog.w("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
+            notifyNotApplyConfiguration();
         }
 
     }
+
 
     @Override
     public void reloadAd() {
@@ -65,6 +69,7 @@ class AMBannerController extends AMController {
 
     }
 
+
     @Override
     protected void applyAdRequest(AMCustomAdRequest adRequest) {
         AMLog.d("apply banner configuration...");
@@ -74,11 +79,24 @@ class AMBannerController extends AMController {
                 mCustomBanner.loadBanner(mContext, mCustomListener, (AMBannerAdRequest)adRequest);
             } else {
                 AMLog.d("Cannot load banner because it has no configuration to be applied.");
+                notifyNotApplyConfiguration();
             }
         } else {
             AMLog.d("Cannot load banner. Have you ever called method loadAd()?");
+            notifyNotApplyConfiguration();
         }
     }
+
+
+    private void notifyNotApplyConfiguration() {
+        if(getAMView() != null) {
+            AMListener listener = getAMView().getListener();
+            if (listener != null) {
+                ((AMBannerListener) listener).onNotApplyConfiguration(mBannerView);
+            }
+        }
+    }
+
 
     private void setContentView(View bannerView) {
         AMLog.d("display banner ad...");
@@ -87,6 +105,7 @@ class AMBannerController extends AMController {
             mBannerView.addView(bannerView);
         }
     }
+
 
     @Override
     protected void destroy() {
@@ -108,6 +127,7 @@ class AMBannerController extends AMController {
         mCustomAdRequest = null;
     }
 
+
     private AMBannerAdRequest getApplyAdRequest(AMAdRequest adRequest) {
         AMBannerAdRequest adBannerRequest = null;
         if(adRequest != null) {
@@ -123,6 +143,7 @@ class AMBannerController extends AMController {
         return adBannerRequest;
     }
 
+
     private AMBannerConfiguration getConfiguration() {
         AMConfiguration config = mAppEngine.getConfiguration(mBannerView.getPlacementUid());
         if(config != null && config instanceof AMBannerConfiguration) {
@@ -130,6 +151,7 @@ class AMBannerController extends AMController {
         }
         return null;
     }
+
 
     private void scheduleRefreshTime (AMBannerAdRequest adRequest) {
         int refreshRate = adRequest.getRefreshRate();
@@ -148,6 +170,7 @@ class AMBannerController extends AMController {
         }
     }
 
+
     private Runnable createRunnable(final AMBannerAdRequest adRequest) {
         return new Runnable() {
             @Override
@@ -157,6 +180,7 @@ class AMBannerController extends AMController {
             }
         };
     }
+
 
     //   _____ __  __ __  __             ____ _
     //  |_   _|  \ | |  | | | ___  __ __/ ___| | ____    ___  ___

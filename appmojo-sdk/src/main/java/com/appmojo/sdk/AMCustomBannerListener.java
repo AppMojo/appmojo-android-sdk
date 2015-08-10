@@ -11,5 +11,4 @@ interface AMCustomBannerListener {
     void onCustomBannerClosed();
     void onCustomBannerOpened();
     void onCustomBannerLeftApplication();
-
 }
