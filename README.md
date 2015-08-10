@@ -5,7 +5,7 @@ AppMojo is a A/B testing tools for test advertisement to find the meximum return
 To include AppMojo SDK in your application you can select the following way:
 
 **Jar**
-  * [appmojo-sdk.jar](https://github.com/AppMojo/appmojo-android-sdk/blob/develop/downloads/jars/appmojo-sdk.jar)
+  * [appmojo-sdk.jar](https://github.com/AppMojo/appmojo-android-sdk/blob/develop/downloads/jars/appmojo-sdk.jar?raw=true)
 
 **Gradle**
 ```gradle
