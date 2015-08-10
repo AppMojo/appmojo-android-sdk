@@ -2,9 +2,18 @@
 AppMojo is a A/B testing tools for test advertisement to find the meximum return value to the user. 
 
 # Download
-The AppMojo SDK is distributed as source code that you can include in your application. AppMojo provides archive of source code in following:
+To include AppMojo SDK in your application you can select the following way:
 
-  * AppMojo Android SDK.zip
+**Jar**
+  * [appmojo-sdk.jar](https://github.com/AppMojo/appmojo-android-sdk/blob/develop/downloads/jars/appmojo-sdk.jar)
+
+**Gradle**
+```gradle
+dependencies {
+    ...
+    compile 'com.appmojo:appmojo-sdk:0.0.3'
+}
+```
   
 # Integrate
 
