@@ -20,9 +20,11 @@ import java.util.Map;
 class AMAuthenticationManager {
 
     private Context mContext;
+    private  AMConnectionHelper mConnectionHelper;
 
     public AMAuthenticationManager(Context context){
         mContext = context;
+        mConnectionHelper = new AMConnectionHelper();
     }
 
     public void requestToken(String appId, String appSecret, final AMResponseListener<AMToken> listener) {
@@ -30,8 +32,7 @@ class AMAuthenticationManager {
         String body = createJsonBody(appId, appSecret);
         Map<String, String> headers = getHeaderData();
 
-        AMConnectionHelper connectionHelper = new AMConnectionHelper();
-        connectionHelper.post(urlStr, headers, body, new AMConnectionListener() {
+        mConnectionHelper.post(urlStr, headers, body, new AMConnectionListener() {
             @Override
             public void onConnectionSuccess(AMConnectionResponse response) {
                 handleOnConnectionSuccess(response, listener);
@@ -44,6 +45,7 @@ class AMAuthenticationManager {
             }
         });
     }
+
 
     private void handleOnConnectionSuccess(AMConnectionResponse response, AMResponseListener<AMToken> listener) {
         AMToken token = new AMToken();
@@ -68,6 +70,7 @@ class AMAuthenticationManager {
         return headers;
     }
 
+
     private String createJsonBody(String appId, String appSecret) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -78,5 +81,14 @@ class AMAuthenticationManager {
             AMLog.e("Failed to create authentication body.", e);
         }
         return jsonObject.toString();
+    }
+
+    public void onDestroy(){
+        mContext = null;
+        if(mConnectionHelper != null) {
+            mConnectionHelper.shutdownAllTask();
+            mConnectionHelper = null;
+        }
+
     }
 }

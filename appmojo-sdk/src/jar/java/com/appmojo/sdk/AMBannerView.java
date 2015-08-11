@@ -25,6 +25,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private AMListener mListener;
     private AMAdSize mAdSize = AMAdSize.BANNER;
     private Context mContext;
+    private boolean mShouldAutoHide;
 
     public AMBannerView(Context context) {
         super(context);
@@ -44,6 +45,7 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     private void initView(Context context) {
         mContext = context;
+        mShouldAutoHide = true;
         if (!isInEditMode()) {
             mAMController = AMViewControllerFactory.create(mContext, this, AMAdType.BANNER);
         }
@@ -85,6 +87,14 @@ public class AMBannerView extends ViewGroup implements AMView {
     @Override
     public String getCurrentAdUnitId() {
         return mAMController.getCurrentAdUnitId();
+    }
+
+    public void shouldAutoHideView(boolean autoHide) {
+        mShouldAutoHide = autoHide;
+    }
+
+    public boolean isAutoHideView() {
+        return mShouldAutoHide;
     }
 
     @Override

@@ -15,11 +15,11 @@ import java.util.Map;
  */
 class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
 
-    private static final String KEY_PATCH_VERSION = "patch_version";
+    private static final String KEY_UPDATED_AT = "updated_at";
     private static final String KEY_BANNERS = "banners";
     private static final String KEY_INTERSTITIALS = "interstitials";
 
-    private String mLastModify;
+    private String mUpdatedAt;
     private ArrayList<AMBannerConfiguration> mBanners;
     private ArrayList<AMInterstitialConfiguration> mInterstitials;
 
@@ -28,8 +28,8 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
         mInterstitials = new ArrayList<>();
     }
 
-    public String getLastModify() {
-        return mLastModify;
+    public String getUpdateddAt() {
+        return mUpdatedAt;
     }
 
 
@@ -66,8 +66,8 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
         }
 
         try {
-            if (jsonObject.has(KEY_PATCH_VERSION)) {
-                mLastModify = jsonObject.getString(KEY_PATCH_VERSION);
+            if (jsonObject.has(KEY_UPDATED_AT)) {
+                mUpdatedAt = jsonObject.getString(KEY_UPDATED_AT);
             }
             //parsing banner configuration
             parseBanner(jsonObject);

@@ -27,6 +27,7 @@ class AMConfigurationManager {
     private Map<String, AMConfiguration> mConfigMap;
     private AMConfigurationRequest mRequest;
     private int retryCount = 0;
+    private AMConnectionHelper mConnectionHelper;
 
     public AMConfigurationManager(Context context) {
         mContext = context;
@@ -90,8 +91,8 @@ class AMConfigurationManager {
         String body = createJsonBody(amRequest.getDeviceId());
         Map<String, String> headers = getHeaderData(mContext);
 
-        AMConnectionHelper connectionHelper = new AMConnectionHelper();
-        connectionHelper.put(urlStr, headers, body, new AMConnectionListener() {
+        mConnectionHelper = new AMConnectionHelper();
+        mConnectionHelper.put(urlStr, headers, body, new AMConnectionListener() {
             @Override
             public void onConnectionSuccess(AMConnectionResponse response) {
                 handleResponse(response, listener);
@@ -112,15 +113,14 @@ class AMConfigurationManager {
             AMConfigurationResponse configResponse = new AMConfigurationResponse();
             configResponse = configResponse.parse(response.getResponse());
 
-
             if (configResponse != null && configResponse.getAllConfiguration().size() > 0) {
-                String savePatch = AMConfigurationHelper.readPatchVersion(mContext);
-                String receivedPatch = configResponse.getLastModify();
-
-                if (savePatch == null || !savePatch.equals(receivedPatch)) {
+                String saveUpdatedAt = AMConfigurationHelper.readLastUpdated(mContext);
+                String lastUpdatedAt = configResponse.getUpdateddAt();
+                AMLog.d("AppMojo", "saveUpdatedAt: %s, lastUpdatedAt: %s",saveUpdatedAt,lastUpdatedAt);
+                if (saveUpdatedAt == null || !saveUpdatedAt.equals(lastUpdatedAt)) {
                     AMLog.d("Configuration's version not match, update config....");
                     mConfigMap = configResponse.getAllConfiguration();
-                    AMConfigurationHelper.writePatchVersion(mContext, receivedPatch);
+                    AMConfigurationHelper.writePatchVersion(mContext, lastUpdatedAt);
                     AMConfigurationHelper.writeConfiguration(mContext, response.getResponse());
 
                     //notify to caller
@@ -212,7 +212,13 @@ class AMConfigurationManager {
 
     public void onDestroy() {
         mContext = null;
-        mConfigMap.clear();
+        if(mConfigMap != null) {
+            mConfigMap.clear();
+        }
+        if(mConnectionHelper != null) {
+            mConnectionHelper.shutdownAllTask();
+            mConnectionHelper = null;
+        }
     }
 
 

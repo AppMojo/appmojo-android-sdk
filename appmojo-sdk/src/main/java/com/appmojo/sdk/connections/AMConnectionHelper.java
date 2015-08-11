@@ -21,8 +21,7 @@ public class AMConnectionHelper {
 
     public AMConnectionHelper() {
         mHandler = new ConnectionHandler(Looper.getMainLooper());
-        mExecutor = Executors.newFixedThreadPool(3);
-
+        mExecutor = Executors.newFixedThreadPool(1);
     }
 
 
@@ -63,9 +62,13 @@ public class AMConnectionHelper {
     }
 
 
-    public void destroy() {
+    public void  shutdownAllTask() {
         if(mExecutor != null)
             mExecutor.shutdown();
+    }
+
+    public void  onDestroy() {
+        shutdownAllTask();
         mExecutor = null;
     }
 

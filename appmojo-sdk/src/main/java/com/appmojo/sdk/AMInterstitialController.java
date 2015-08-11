@@ -158,41 +158,36 @@ class AMInterstitialController  extends AMController {
     private class AMInterstitialControllerListener implements AMCustomInterstitialListener {
         @Override
         public void onCustomInterstitialLoaded() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMInterstitialListener)listener).onAdLoaded(mAMInterstitial);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMInterstitialListener)getAMView().getListener()).onAdLoaded(mAMInterstitial);
             }
         }
 
         @Override
         public void onCustomInterstitialFailed(int error) {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMInterstitialListener)listener).onAdFailed(mAMInterstitial, error);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMInterstitialListener)getAMView().getListener()).onAdFailed(mAMInterstitial, error);
             }
         }
 
         @Override
         public void onCustomInterstitialShown() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMInterstitialListener)listener).onAdOpened(mAMInterstitial);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMInterstitialListener)getAMView().getListener()).onAdOpened(mAMInterstitial);
             }
         }
 
         @Override
         public void onCustomInterstitialDismissed() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMInterstitialListener)listener).onAdClosed(mAMInterstitial);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMInterstitialListener)getAMView().getListener()).onAdClosed(mAMInterstitial);
             }
         }
 
         @Override
         public void onCustomInterstitialLeftApplication() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                listener.onAdLeftApplication();
+            if(getAMView() != null &&  getAMView().getListener() != null) {
+                getAMView().getListener().onAdLeftApplication();
             }
         }
     }

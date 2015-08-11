@@ -49,11 +49,13 @@ class AMBannerController extends AMController {
             } else {
                 AMLog.d("Cannot load banner because it has no configuration to be applied.");
                 notifyNotApplyConfiguration();
+                setViewVisibility(false);
             }
         } catch (Exception e) {
             mCustomBanner = null;
             AMLog.w("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
             notifyNotApplyConfiguration();
+            setViewVisibility(false);
         }
 
     }
@@ -75,24 +77,35 @@ class AMBannerController extends AMController {
         AMLog.d("apply banner configuration...");
         if(mCustomBanner != null) {
             if (adRequest != null && adRequest instanceof AMBannerAdRequest) {
+                setViewVisibility(true);
                 scheduleRefreshTime((AMBannerAdRequest)adRequest);
                 mCustomBanner.loadBanner(mContext, mCustomListener, (AMBannerAdRequest)adRequest);
             } else {
                 AMLog.d("Cannot load banner because it has no configuration to be applied.");
                 notifyNotApplyConfiguration();
+                setViewVisibility(false);
             }
         } else {
             AMLog.d("Cannot load banner. Have you ever called method loadAd()?");
             notifyNotApplyConfiguration();
+            setViewVisibility(false);
         }
     }
 
 
     private void notifyNotApplyConfiguration() {
-        if(getAMView() != null) {
-            AMListener listener = getAMView().getListener();
-            if (listener != null) {
-                ((AMBannerListener) listener).onNotApplyConfiguration(mBannerView);
+        //if will doesn't have config to be apply.
+        if(mBannerView != null && mBannerView.getListener() != null) {
+                ((AMBannerListener) mBannerView.getListener()).onNotApplyConfiguration(mBannerView);
+        }
+    }
+
+    private void setViewVisibility(boolean isVisible) {
+        if(mBannerView != null && mBannerView.isAutoHideView()) {
+            if(isVisible) {
+                mBannerView.setVisibility(View.VISIBLE);
+            } else {
+                mBannerView.setVisibility(View.GONE);
             }
         }
     }
@@ -100,7 +113,7 @@ class AMBannerController extends AMController {
 
     private void setContentView(View bannerView) {
         AMLog.d("display banner ad...");
-        if(bannerView != null) {
+        if(mBannerView != null && bannerView != null) {
             mBannerView.removeAllViews();
             mBannerView.addView(bannerView);
         }
@@ -195,42 +208,40 @@ class AMBannerController extends AMController {
             AMLog.i("Banner loaded...");
             setContentView(view);
 
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMBannerListener)listener).onAdLoaded(mBannerView);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMBannerListener)getAMView().getListener()).onAdLoaded(mBannerView);
             }
         }
 
         @Override
         public void onCustomBannerFailed(int errCode) {
             AMLog.w("Banner failed to load...");
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMBannerListener)listener).onAdFailed(mBannerView, errCode);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMBannerListener)getAMView().getListener()).onAdFailed(mBannerView, errCode);
             }
         }
 
         @Override
         public void onCustomBannerClosed() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMBannerListener)listener).onAdClosed(mBannerView);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMBannerListener)getAMView().getListener()).onAdClosed(mBannerView);
             }
         }
 
         @Override
         public void onCustomBannerOpened() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null) {
-                ((AMBannerListener)listener).onAdOpened(mBannerView);
+            if(getAMView() != null && getAMView().getListener() != null) {
+                ((AMBannerListener)getAMView().getListener()).onAdOpened(mBannerView);
             }
         }
 
         @Override
         public void onCustomBannerLeftApplication() {
-            AMListener listener = getAMView().getListener();
-            if(listener != null && listener instanceof AMBannerListener) {
-                listener.onAdLeftApplication();
+            if( getAMView() != null) {
+                AMListener listener = getAMView().getListener();
+                if (listener != null && listener instanceof AMBannerListener) {
+                    listener.onAdLeftApplication();
+                }
             }
         }
     }

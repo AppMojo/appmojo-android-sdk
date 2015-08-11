@@ -12,17 +12,17 @@ import java.util.Map;
 public class AMConfigurationHelper {
 
     private static final String KEY_CONFIG_FILE_NAME = "com.appmojo.sdk.configurations";
-    private static final String KEY_PREF_PATCH_VERSION = "com.appmojo.sdk.pref.patch_version";
+    private static final String KEY_PREF_LAST_UPDATED = "com.appmojo.sdk.pref.last_updated";
 
     private AMConfigurationHelper() {
     }
 
-    public static String readPatchVersion(Context context) {
-        return AMSharePrefs.getPreferenceString(context, KEY_PREF_PATCH_VERSION, null);
+    public static String readLastUpdated(Context context) {
+        return AMSharePrefs.getPreferenceString(context, KEY_PREF_LAST_UPDATED, null);
     }
 
     public static void writePatchVersion(Context context, String patchVersion) {
-        AMSharePrefs.setPreference(context, KEY_PREF_PATCH_VERSION, patchVersion);
+        AMSharePrefs.setPreference(context, KEY_PREF_LAST_UPDATED, patchVersion);
     }
 
     public static Map<String, AMConfiguration> readConfiguration(Context context) {

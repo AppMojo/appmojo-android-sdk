@@ -26,6 +26,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private AMListener mListener;
     private AMAdSize mAdSize = AMAdSize.BANNER;
     private Context mContext;
+    private boolean mShouldAutoHide;
 
     public AMBannerView(Context context) {
         super(context);
@@ -45,6 +46,7 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
         mContext = context;
+        mShouldAutoHide = true;
         if (!isInEditMode()) {
             mAMController = AMViewControllerFactory.create(mContext, this, AMAdType.BANNER);
         }
@@ -88,6 +90,14 @@ public class AMBannerView extends ViewGroup implements AMView {
         return mAMController.getCurrentAdUnitId();
     }
 
+    public void shouldAutoHideView(boolean autoHide) {
+        mShouldAutoHide = autoHide;
+    }
+
+    public boolean isAutoHideView() {
+        return mShouldAutoHide;
+    }
+
     @Override
     public AMAdNetwork getAdNetwork() {
         return mAMController.getAdNetwork();
@@ -127,8 +137,10 @@ public class AMBannerView extends ViewGroup implements AMView {
             try {
                 int adSizeStr = a.getInt(R.styleable.AppMojo_AMAdSize, 0);
                 String placementId = a.getString(R.styleable.AppMojo_AMPlacementId);
+                boolean autoHide = a.getBoolean(R.styleable.AppMojo_AMAutoHide, true);
                 setPlacementUid(placementId);
                 setAdSize(AMAdSize.forValue(adSizeStr));
+                shouldAutoHideView(autoHide);
             } finally {
                 a.recycle();
             }

@@ -12,7 +12,8 @@
     </attr>
 
     <declare-styleable name="AppMojo">
-        <attr name="AMAdSize" />
+        <attr name="AMAdSize"/>
         <attr name="AMPlacementId" format="string"/>
+        <attr name="AMAutoHide" format="boolean"/>
     </declare-styleable>
 </resources>

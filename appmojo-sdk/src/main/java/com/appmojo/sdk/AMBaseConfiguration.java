@@ -5,7 +5,7 @@ package com.appmojo.sdk;
  */
 class AMBaseConfiguration {
 
-    static final String ACTION_CONFIGURATION_CHANGE = "com.appmojo,sdk.configuration_change";
+    static final String ACTION_CONFIGURATION_CHANGE = "com.appmojo.sdk.configuration_change";
 
     private static final String APPMOJO_URL_DEV = "http://dev.appmojo.com/api/v1";
     private static final String APPMOJO_URL_PRODUCTION = "https://appmojo.com/api/v1";

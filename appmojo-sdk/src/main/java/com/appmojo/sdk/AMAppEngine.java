@@ -26,6 +26,7 @@ public class AMAppEngine {
     private AMConfigurationManager mConfigurationManager;
     private Context mContext;
     private boolean isDebugMode;
+    private AMAuthenticationManager mAuthenManager;
 
     private AMAppEngine() {
     }
@@ -49,10 +50,24 @@ public class AMAppEngine {
         mAppId = appId;
         mAppSecret = appSecretKey;
         mContext = context.getApplicationContext();
+        mAuthenManager = new AMAuthenticationManager(mContext);
         prepareConfigurationManager(mContext);
 
         //start process
         requestToken(mAppId, mAppSecret, ToKenStep.REQUEST_TOKEN);
+    }
+
+
+    private void stop(){
+        if(mAuthenManager != null) {
+            mAuthenManager.onDestroy();
+            mAuthenManager = null;
+        }
+
+        if (mConfigurationManager != null) {
+            mConfigurationManager.onDestroy();
+            mConfigurationManager = null;
+        }
     }
 
 
@@ -74,8 +89,7 @@ public class AMAppEngine {
 
 
     public void refreshToken(final AMRefreshTokenListener listener) {
-        AMAuthenticationManager authenManager = new AMAuthenticationManager(mContext);
-        authenManager.requestToken(mAppId, mAppSecret, new AMResponseListener<AMToken>() {
+        mAuthenManager.requestToken(mAppId, mAppSecret, new AMResponseListener<AMToken>() {
 
             @Override
             public void onSuccess(AMToken token) {
@@ -83,7 +97,6 @@ public class AMAppEngine {
                 AMLog.d("Token : " + token.toString());
                 if(listener != null)
                     listener.onRefreshTokenSuccess();
-
             }
 
             @Override
@@ -97,8 +110,7 @@ public class AMAppEngine {
 
 
     private void requestToken(String appId, String appSecretKey, final ToKenStep step) {
-        AMAuthenticationManager authenManager = new AMAuthenticationManager(mContext);
-        authenManager.requestToken(appId, appSecretKey, new AMResponseListener<AMToken>() {
+        mAuthenManager.requestToken(appId, appSecretKey, new AMResponseListener<AMToken>() {
             @Override
             public void onSuccess(AMToken token) {
                 AMLog.d("Authentication succeed.");
