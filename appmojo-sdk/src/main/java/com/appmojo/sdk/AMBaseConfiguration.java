@@ -1,8 +1,6 @@
 package com.appmojo.sdk;
 
-/**
- * Created by nutron on 7/23/15 AD.
- */
+
 class AMBaseConfiguration {
 
     static final String ACTION_CONFIGURATION_CHANGE = "com.appmojo.sdk.configuration_change";

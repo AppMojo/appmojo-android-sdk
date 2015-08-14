@@ -2,9 +2,7 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 
-/**
- * Created by nutron on 7/3/15 AD.
- */
+
 public class AppMojo {
 
     private AppMojo(){

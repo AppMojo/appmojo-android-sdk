@@ -5,9 +5,7 @@ import android.util.Log;
 
 import com.appmojo.sdk.base.AMAdNetwork;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 public class AMInterstitial implements AMView {
     private static final String TAG = "AMInterstitial";
 

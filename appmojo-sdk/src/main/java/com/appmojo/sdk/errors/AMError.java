@@ -10,9 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by nutron on 7/20/15 AD.
- */
+
 public class AMError implements AMJsonParser<AMError>{
 
     private static final int DEFAULT_ERROR_CODE = -1;

@@ -6,9 +6,7 @@ import android.view.View;
 
 import com.appmojo.sdk.utils.AMLog;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 class AMBannerController extends AMController {
     private static final int MINIMUM_REFRESH_RATE_SECOND = 30;
 

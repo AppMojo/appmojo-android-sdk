@@ -2,9 +2,7 @@ package com.appmojo.sdk;
 
 import com.appmojo.sdk.base.AMAdSize;
 
-/**
- * Created by nutron on 6/29/15 AD.
- */
+
 class AMBannerAdRequest extends AMCustomAdRequest {
 
     private AMAdSize adSize;

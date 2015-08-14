@@ -1,8 +1,6 @@
 package com.appmojo.sdk.errors;
 
-/**
- * Created by nutron on 7/28/15 AD.
- */
+
 public class AMErrorConstant {
 
     public static final String KEY_CODE = "code";

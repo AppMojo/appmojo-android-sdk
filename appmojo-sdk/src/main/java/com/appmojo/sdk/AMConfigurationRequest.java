@@ -1,8 +1,6 @@
 package com.appmojo.sdk;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 class AMConfigurationRequest {
     private String appId;
     private String deviceId;

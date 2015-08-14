@@ -4,9 +4,6 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 
-/**
- * Created by nutron on 6/11/15 AD.
- */
 public enum AMAdSize {
 
     BANNER(0),

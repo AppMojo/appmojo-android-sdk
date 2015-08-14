@@ -6,15 +6,9 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.appmojo.sdk.connections.AMResponseListener;
 import com.appmojo.sdk.errors.AMError;
-import com.appmojo.sdk.mock.AMMock;
 import com.appmojo.sdk.utils.AMLog;
 
-import java.util.Map;
 
-
-/**
- * Created by nutron on 7/20/15 AD.
- */
 public class AMAppEngine {
     private enum ToKenStep {
         REQUEST_TOKEN, REFRESH_TOKEN
@@ -164,11 +158,10 @@ public class AMAppEngine {
     }
 
     /**
-     *  =================== FOR TEST ======================
-     * @param mock : mock data
+     * <b>**THIS METHOD FOR TEST ONLY.**</b>
+     * @return AMConfigurationManager
      */
-    public void setMockData(Map<String, AMMock> mock) {
-        AMMockHelper mockHelper = new AMMockHelper();
-        mConfigurationManager.setTestData(mockHelper.generateConfiguration(mock));
+    public AMConfigurationManager getConfigurationManager() {
+       return mConfigurationManager;
     }
 }

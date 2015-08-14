@@ -14,9 +14,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nutron on 7/20/15 AD.
- */
+
 class AMAuthenticationManager {
 
     private Context mContext;

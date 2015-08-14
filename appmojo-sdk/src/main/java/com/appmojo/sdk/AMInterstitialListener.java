@@ -1,8 +1,6 @@
 package com.appmojo.sdk;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 public abstract class AMInterstitialListener extends AMListener {
     public void onAdLoaded(AMInterstitial view) {
     }

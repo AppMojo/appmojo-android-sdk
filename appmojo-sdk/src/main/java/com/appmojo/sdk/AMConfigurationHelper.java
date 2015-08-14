@@ -6,9 +6,7 @@ import com.appmojo.sdk.utils.AMSharePrefs;
 
 import java.util.Map;
 
-/**
- * Created by nutron on 7/31/15 AD.
- */
+
 public class AMConfigurationHelper {
 
     private static final String KEY_CONFIG_FILE_NAME = "com.appmojo.sdk.configurations";

@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by nutron on 6/29/15 AD.
- */
+
 class AMCustomAdRequest {
 
     private int gender;

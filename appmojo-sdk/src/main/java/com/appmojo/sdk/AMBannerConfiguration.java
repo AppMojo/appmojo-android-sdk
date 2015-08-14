@@ -5,9 +5,7 @@ import com.appmojo.sdk.utils.AMLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by nutron on 6/24/15 AD.
- */
+
 class AMBannerConfiguration extends AMConfiguration {
 
     private static final String KEY_REFRESH_RATE = "refresh_rate";

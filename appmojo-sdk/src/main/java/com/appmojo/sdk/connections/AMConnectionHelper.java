@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by nutron on 8/3/15 AD.
- */
 public class AMConnectionHelper {
 
     public static final int TASK_COMPLETE = 1;

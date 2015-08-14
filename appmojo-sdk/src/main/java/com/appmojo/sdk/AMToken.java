@@ -7,9 +7,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-/**
- * Created by nutron on 7/23/15 AD.
- */
+
 class AMToken implements Serializable, AMJsonParser<AMToken>{
 
     private static final long serialVersionUID = -8507278560283408481L;

@@ -7,9 +7,7 @@ import com.appmojo.sdk.utils.AMLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by nutron on 6/24/15 AD.
- */
+
 class AMConfiguration implements AMJsonParser<AMConfiguration>{
 
     protected static final String KEY_PLACEMENT_ID = "placement_id";

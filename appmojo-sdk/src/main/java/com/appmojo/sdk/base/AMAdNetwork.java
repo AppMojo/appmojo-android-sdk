@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Created by nutron on 6/11/15 AD.
- */
 public enum AMAdNetwork {
     UNKNOWN("UNKNOWN"),
     ADMOB("ADMOB"),

@@ -5,9 +5,7 @@ import com.appmojo.sdk.utils.AMLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by nutron on 6/24/15 AD.
- */
+
 class AMInterstitialConfiguration extends AMConfiguration {
 
     private static final String KEY_SESSION_FREQUENCY = "session_frequency";

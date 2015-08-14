@@ -16,9 +16,7 @@ import android.widget.TextView;
 import com.appmojo.sdk.base.AMAdNetwork;
 import com.appmojo.sdk.base.AMAdSize;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 public class AMBannerView extends ViewGroup implements AMView {
 
     private AMController mAMController;

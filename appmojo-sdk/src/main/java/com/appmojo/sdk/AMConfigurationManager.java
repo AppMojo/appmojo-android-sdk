@@ -17,9 +17,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nutron on 6/25/15 AD.
- */
+
 class AMConfigurationManager {
     private static final int MAX_RETRY_COUNT = 1;
 

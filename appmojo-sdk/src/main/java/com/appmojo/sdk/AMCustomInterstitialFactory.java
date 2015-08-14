@@ -2,9 +2,7 @@ package com.appmojo.sdk;
 
 import java.lang.reflect.Constructor;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 class AMCustomInterstitialFactory {
 
     private AMCustomInterstitialFactory(){

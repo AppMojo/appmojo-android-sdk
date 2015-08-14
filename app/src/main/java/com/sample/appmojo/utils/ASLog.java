@@ -2,9 +2,7 @@ package com.sample.appmojo.utils;
 
 import android.util.Log;
 
-/**
- * Created by nutron on 4/29/15 AD.
- */
+
 @SuppressWarnings("ALL")
 public class ASLog {
 

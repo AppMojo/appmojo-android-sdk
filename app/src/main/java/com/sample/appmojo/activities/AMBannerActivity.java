@@ -8,9 +8,7 @@ import com.appmojo.sdk.AMAdRequest;
 import com.appmojo.sdk.AMBannerView;
 import com.appmojo.sdk.base.AMAdSize;
 
-/**
- * Created by nutron on 6/24/15 AD.
- */
+
 public class AMBannerActivity extends Activity {
     private AMBannerView mXmlAdView;
     private AMBannerView mBannerView;

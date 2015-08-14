@@ -9,9 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.appmojo.sdk.base.AMAdNetwork;
 import com.appmojo.sdk.utils.AMLog;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 abstract class AMController {
     protected Context mContext;
     protected AMView mAMView;

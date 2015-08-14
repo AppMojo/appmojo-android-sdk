@@ -1,8 +1,6 @@
 package com.appmojo.sdk;
 
-/**
- * Created by nutron on 6/29/15 AD.
- */
+
 class AMInterstitialAdRequest extends AMCustomAdRequest {
 
     private int sessionFrequency;

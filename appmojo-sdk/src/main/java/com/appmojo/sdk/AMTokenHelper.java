@@ -5,9 +5,7 @@ import android.content.Context;
 import com.appmojo.sdk.utils.AMFileUtils;
 import com.appmojo.sdk.utils.AMSharePrefs;
 
-/**
- * Created by nutron on 7/21/15 AD.
- */
+
 class AMTokenHelper {
     private static final String TOKEN_FILE_NAME = "auth_token";
     private static final String PREF_KEY_TOKEN = "pref_key_token";

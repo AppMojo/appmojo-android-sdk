@@ -1,8 +1,6 @@
 package com.appmojo.sdk;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 public abstract class AMBannerListener extends AMListener {
     public void onAdLoaded(AMBannerView view) {
     }

@@ -6,9 +6,7 @@ import com.appmojo.sdk.utils.AMSharePrefs;
 
 import java.util.UUID;
 
-/**
- * Created by nutron on 7/23/15 AD.
- */
+
 class AMClientProvider {
 
     private static final String PREF_KEY_CLIENT_UUID = "com.appmojo.sdk.client_uuid";

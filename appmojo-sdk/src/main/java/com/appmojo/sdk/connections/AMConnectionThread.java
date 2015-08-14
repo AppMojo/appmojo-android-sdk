@@ -18,9 +18,6 @@ import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
-/**
- * Created by nutron on 8/5/15 AD.
- */
 public class AMConnectionThread implements Runnable {
 
     public static final int CONNECT_STATE_COMPLETED = 1;

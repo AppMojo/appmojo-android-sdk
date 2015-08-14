@@ -7,9 +7,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-/**
- * Created by nutron on 6/24/15 AD.
- */
+
 class AMAdMobInterstitialAdapter extends AMCustomInterstitial {
     private static final String TAG = "AppMojo";
 

@@ -7,9 +7,6 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-/**
- * Created by nutron on 8/5/15 AD.
- */
 public class AMConnectionTask {
 
     private AMConnectionHelper mConnectionHelper;

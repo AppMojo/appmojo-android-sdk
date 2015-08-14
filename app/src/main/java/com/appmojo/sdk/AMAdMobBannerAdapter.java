@@ -10,9 +10,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
-/**
- * Created by nutron on 6/24/15 AD.
- */
+
 class AMAdMobBannerAdapter extends AMCustomBanner {
     private static final String TAG = "AppMojo";
 

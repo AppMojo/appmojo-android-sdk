@@ -5,9 +5,7 @@ import android.location.Location;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * Created by nutron on 6/29/15 AD.
- */
+
 public class AMAdRequest {
     public static final int GENDER_MALE = 1;
     public static final int GENDER_FEMALE = 2;

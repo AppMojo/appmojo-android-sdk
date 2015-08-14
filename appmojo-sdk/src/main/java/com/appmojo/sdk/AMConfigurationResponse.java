@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nutron on 8/4/15 AD.
- */
+
 class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
 
     private static final String KEY_UPDATED_AT = "updated_at";

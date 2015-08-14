@@ -6,9 +6,7 @@ import com.appmojo.sdk.utils.AMLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by nutron on 7/20/15 AD.
- */
+
 public class AMSubError implements AMJsonParser<AMSubError> {
 
     private int code;

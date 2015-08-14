@@ -4,9 +4,7 @@ import android.content.Context;
 
 import com.appmojo.sdk.utils.AMLog;
 
-/**
- * Created by nutron on 6/23/15 AD.
- */
+
 class AMInterstitialController  extends AMController {
     //no prefix private because it easy to test
     AMCustomInterstitialListener mCustomListener;

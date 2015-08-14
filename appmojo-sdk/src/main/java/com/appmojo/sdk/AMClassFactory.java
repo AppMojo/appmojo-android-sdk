@@ -3,9 +3,7 @@ package com.appmojo.sdk;
 
 import com.appmojo.sdk.base.AMAdNetwork;
 
-/**
- * Created by nutron on 6/25/15 AD.
- */
+
 class AMClassFactory {
 
     private AMClassFactory(){
