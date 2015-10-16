@@ -10,6 +10,5 @@ public abstract class AMBannerListener extends AMListener {
     }
     public void onAdOpened(AMBannerView view) {
     }
-    public void onNotApplyConfiguration(AMBannerView view) {
-    }
+    public abstract void onNotApplyConfiguration(AMBannerView view);
 }

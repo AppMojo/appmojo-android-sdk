@@ -6,10 +6,13 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.appmojo.sdk.connections.AMResponseListener;
 import com.appmojo.sdk.errors.AMError;
+import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.utils.AMLog;
 
 
-public class AMAppEngine {
+public class AMAppEngine implements AMEventTriggerListener {
+
     private enum ToKenStep {
         REQUEST_TOKEN, REFRESH_TOKEN
     }
@@ -21,6 +24,10 @@ public class AMAppEngine {
     private Context mContext;
     private boolean isDebugMode;
     private AMAuthenticationManager mAuthenManager;
+    private AMSessionManager mSessionManager;
+    private AMEventDelivery mEventDelivery;
+    private AMEventRepository mEventRepository;
+    private AMActivityTracker mActivityTracker;
 
     private AMAppEngine() {
     }
@@ -36,16 +43,33 @@ public class AMAppEngine {
         isDebugMode = isDebug;
     }
 
+
     public boolean isDebugMode() {
         return isDebugMode;
     }
+
+
+    public String getAppId() {
+        return mAppId;
+    }
+
+
+    public String getAppSecret() {
+        return mAppSecret;
+    }
+
 
     public void start(Context context, String appId, String appSecretKey) {
         mAppId = appId;
         mAppSecret = appSecretKey;
         mContext = context.getApplicationContext();
         mAuthenManager = new AMAuthenticationManager(mContext);
+
         prepareConfigurationManager(mContext);
+        prepareEventRepository(mContext);
+        prepareEventDelivery(mContext);
+        prepareSessionManager(mContext);
+        prepareActivityTracker(mContext);
 
         //start process
         requestToken(mAppId, mAppSecret, ToKenStep.REQUEST_TOKEN);
@@ -62,6 +86,35 @@ public class AMAppEngine {
             mConfigurationManager.onDestroy();
             mConfigurationManager = null;
         }
+    }
+
+    public String getCurrentSessionId(){
+        return mSessionManager.getCurrentSessionId();
+    }
+
+
+    private void prepareActivityTracker(Context context) {
+        mActivityTracker = new AMActivityTracker(context);
+        mActivityTracker.setEventRepository(mEventRepository);
+        mActivityTracker.setConfigurationManager(mConfigurationManager);
+        mActivityTracker.setSessionManager(mSessionManager);
+    }
+
+    private void prepareEventDelivery(Context context) {
+        mEventDelivery = new AMEventDelivery(context);
+        mEventDelivery.setEventRepository(mEventRepository);
+    }
+
+
+    private void prepareEventRepository(Context context) {
+        mEventRepository = new AMEventRepository(context);
+    }
+
+
+    private void prepareSessionManager(Context context) {
+        mSessionManager = new AMSessionManager(context);
+        mSessionManager.setEventTriggerListener(this);
+        mSessionManager.setEventRepository(mEventRepository);
     }
 
 
@@ -88,7 +141,6 @@ public class AMAppEngine {
             @Override
             public void onSuccess(AMToken token) {
                 AMLog.d("Refresh token succeed.");
-                AMLog.d("Token : " + token.toString());
                 if(listener != null)
                     listener.onRefreshTokenSuccess();
             }
@@ -108,7 +160,6 @@ public class AMAppEngine {
             @Override
             public void onSuccess(AMToken token) {
                 AMLog.d("Authentication succeed.");
-                AMLog.d("Token : " + token.toString());
                 if(step == ToKenStep.REQUEST_TOKEN) {
                     requestConfiguration();
                 }
@@ -142,9 +193,12 @@ public class AMAppEngine {
     }
 
     private void handleOnConfigurationSuccess(boolean hasChanged) {
+        //log session
+        mSessionManager.logSession();
+
         AMLog.d("Get configuration success...");
         if (hasChanged) {
-            AMLog.d("Broadcasting on configuration change...");
+            AMLog.d("Notify on configuration change...");
             Intent intent = new Intent(AMBaseConfiguration.ACTION_CONFIGURATION_CHANGE);
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
         }
@@ -157,11 +211,41 @@ public class AMAppEngine {
         }
     }
 
+
+    /**
+     * This method was trigger from Session manager when session is end.
+     */
+    @Override
+    public void onTriggerDelivery() {
+        AMLog.d("Delivery events....");
+        mEventDelivery.startDeliverEvent();
+    }
+
+    /**
+     * This method was will log the all activity to the database.
+     */
+    public void logActivity(AMEventType type, String placementId, String adUnitId) {
+        String experimentId = AMConfigurationHelper.readExperimentId(mContext);
+        if(experimentId == null || experimentId.length() < 1) {
+            AMLog.w("No running experiment, activity will not be logged ...");
+            return;
+        }
+
+        mSessionManager.logSession();
+        mActivityTracker.logActivity(type, placementId, adUnitId);
+
+    }
+
+
     /**
      * <b>**THIS METHOD FOR TEST ONLY.**</b>
      * @return AMConfigurationManager
      */
     public AMConfigurationManager getConfigurationManager() {
-       return mConfigurationManager;
+        return mConfigurationManager;
     }
+
+
+
+
 }

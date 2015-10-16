@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class AMSubError implements AMJsonParser<AMSubError> {
 
     private int code;
+    private String reason;
     private String field;
     private String message;
 
@@ -41,6 +42,14 @@ public class AMSubError implements AMJsonParser<AMSubError> {
         this.message = message;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public AMSubError parse(String jsonString) {
         if(jsonString != null) {
@@ -63,6 +72,8 @@ public class AMSubError implements AMJsonParser<AMSubError> {
         try {
             if(subErrObj.has(AMErrorConstant.KEY_CODE))
                 this.setCode(subErrObj.getInt(AMErrorConstant.KEY_CODE));
+            if(subErrObj.has(AMErrorConstant.KEY_REASON))
+                this.setReason(subErrObj.getString(AMErrorConstant.KEY_REASON));
             if(subErrObj.has(AMErrorConstant.KEY_FIELD))
                 this.setField(subErrObj.getString(AMErrorConstant.KEY_FIELD));
             if(subErrObj.has(AMErrorConstant.KEY_MESSAGE))

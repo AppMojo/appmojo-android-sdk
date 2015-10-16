@@ -2,6 +2,7 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 
+import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.utils.AMLog;
 
 
@@ -59,6 +60,11 @@ class AMInterstitialController  extends AMController {
             notifyNotApplyConfiguration();
         }
 
+    }
+
+    @Override
+    public void onVisibilityChanged(int isibility) {
+        //not thing
     }
 
     @Override
@@ -170,6 +176,7 @@ class AMInterstitialController  extends AMController {
 
         @Override
         public void onCustomInterstitialShown() {
+            logActivity(AMEventType.IMPRESSION);
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMInterstitialListener)getAMView().getListener()).onAdOpened(mAMInterstitial);
             }

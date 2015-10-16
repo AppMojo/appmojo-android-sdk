@@ -110,16 +110,16 @@ public class AMBannerView extends ViewGroup implements AMView {
         mAMController.loadAd(adRequest);
     }
 
+
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        mAMController.onVisibilityChanged(visibility);
+    }
+
     @Override
     public void destroy() {
         mAMController.onDestroy();
         mContext = null;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        destroy();
     }
 
     private void initPreview(Context context) {

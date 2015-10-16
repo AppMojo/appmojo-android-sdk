@@ -1,7 +1,7 @@
 package com.appmojo.sdk;
 
 
-class AMBaseConfiguration {
+public class AMBaseConfiguration {
 
     static final String ACTION_CONFIGURATION_CHANGE = "com.appmojo.sdk.configuration_change";
 
@@ -10,6 +10,8 @@ class AMBaseConfiguration {
     private static final String SUB_URL_AUTHEN = "/auth";
     private static final String SUB_URL_APPS = "/apps";
     private static final String SUB_URL_CONFIGURATION = "/running-configuration";
+    private static final String SUB_URL_SESSION = "/sessions";
+    private static final String SUB_URL_ACTIVITIES = "/activities";
 
     private AMBaseConfiguration(){
     }
@@ -28,6 +30,26 @@ class AMBaseConfiguration {
         builder.append("/");
         builder.append(appId);
         builder.append(SUB_URL_CONFIGURATION);
+        return builder.toString();
+    }
+
+    public static String getUrlSession(String appId){
+        StringBuilder builder = new StringBuilder();
+        builder.append(AMAppEngine.getInstance().isDebugMode() ? APPMOJO_URL_DEV : APPMOJO_URL_PRODUCTION);
+        builder.append(SUB_URL_APPS);
+        builder.append("/");
+        builder.append(appId);
+        builder.append(SUB_URL_SESSION);
+        return builder.toString();
+    }
+
+    public static String getUrlActivities(String appId){
+        StringBuilder builder = new StringBuilder();
+        builder.append(AMAppEngine.getInstance().isDebugMode() ? APPMOJO_URL_DEV : APPMOJO_URL_PRODUCTION);
+        builder.append(SUB_URL_APPS);
+        builder.append("/");
+        builder.append(appId);
+        builder.append(SUB_URL_ACTIVITIES);
         return builder.toString();
     }
 }

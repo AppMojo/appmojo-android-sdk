@@ -38,6 +38,20 @@ class AMConfigurationManager {
         mConfigMap = AMConfigurationHelper.readConfiguration(mContext);
     }
 
+    public String getExperimentId() {
+        return AMConfigurationHelper.readExperimentId(mContext);
+    }
+
+
+    public String getVariantId() {
+        return AMConfigurationHelper.readVariantId(mContext);
+    }
+
+
+    public int getRevisionId() {
+        return AMConfigurationHelper.readRevisionNumber(mContext);
+    }
+
 
     public synchronized AMConfiguration getConfiguration(String placementId) {
         AMConfiguration configuration = null;
@@ -112,13 +126,18 @@ class AMConfigurationManager {
             configResponse = configResponse.parse(response.getResponse());
 
             if (configResponse != null && configResponse.getAllConfiguration().size() > 0) {
-                String saveUpdatedAt = AMConfigurationHelper.readLastUpdated(mContext);
-                String lastUpdatedAt = configResponse.getUpdateddAt();
-                AMLog.d("AppMojo", "saveUpdatedAt: %s, lastUpdatedAt: %s",saveUpdatedAt,lastUpdatedAt);
-                if (saveUpdatedAt == null || !saveUpdatedAt.equals(lastUpdatedAt)) {
-                    AMLog.d("Configuration's version not match, update config....");
+                String saveVariantId = AMConfigurationHelper.readVariantId(mContext);
+                int saveRevisionNumber = AMConfigurationHelper.readRevisionNumber(mContext);
+                String variantId = configResponse.getVariantId();
+                int revisionNumber = configResponse.getRevisionNumber();
+
+                if (saveVariantId == null || !saveVariantId.equals(variantId)
+                        || saveRevisionNumber == -1 || saveRevisionNumber != revisionNumber) {
+                    AMLog.d("Configuration's revision not match, update config....");
                     mConfigMap = configResponse.getAllConfiguration();
-                    AMConfigurationHelper.writePatchVersion(mContext, lastUpdatedAt);
+                    AMConfigurationHelper.writeExperimentId(mContext, configResponse.getExperimentId());
+                    AMConfigurationHelper.writeRevisionNumber(mContext, revisionNumber);
+                    AMConfigurationHelper.writeVariantId(mContext, variantId);
                     AMConfigurationHelper.writeConfiguration(mContext, response.getResponse());
 
                     //notify to caller

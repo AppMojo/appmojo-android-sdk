@@ -75,7 +75,11 @@ class AMConfiguration implements AMJsonParser<AMConfiguration>{
             }
 
             if (jsonObject.has(KEY_AD_UNIT_ID)) {
-                this.setAdUnitId(jsonObject.getString(KEY_AD_UNIT_ID));
+                String adUnit = jsonObject.getString(KEY_AD_UNIT_ID);
+                if(adUnit != null) {
+                    adUnit = adUnit.replace(":","/");
+                    this.setAdUnitId(adUnit);
+                }
             }
 
             if (jsonObject.has(KEY_AD_NETWORK)) {

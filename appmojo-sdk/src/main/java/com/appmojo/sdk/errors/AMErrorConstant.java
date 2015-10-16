@@ -4,6 +4,7 @@ package com.appmojo.sdk.errors;
 public class AMErrorConstant {
 
     public static final String KEY_CODE = "code";
+    public static final String KEY_REASON = "reason";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_ERRORS = "errors";
     public static final String KEY_FIELD = "field";

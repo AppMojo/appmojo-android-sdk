@@ -14,7 +14,7 @@ class AMClientProvider {
     private AMClientProvider(){
     }
 
-    static String readUuid(Context context) {
+    public static String readUuid(Context context) {
         String uuid = AMSharePrefs.getPreferenceString(context, PREF_KEY_CLIENT_UUID, null);
         if(uuid == null) {
             uuid = UUID.randomUUID().toString();

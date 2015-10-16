@@ -94,7 +94,8 @@ public class AMError implements AMJsonParser<AMError>{
                     AMSubError subErr = new AMSubError();
                     subErr = subErr.parse(errArray.getJSONObject(i));
 
-                    if (subErr != null && subErr.getCode() != DEFAULT_ERROR_CODE) {
+                    if ((subErr != null && subErr.getCode() != DEFAULT_ERROR_CODE)
+                            || (subErr != null && subErr.getReason() != null)) {
                         this.addSubErrors(subErr);
                     }
                 }

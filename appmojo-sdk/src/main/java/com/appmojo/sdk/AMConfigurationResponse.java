@@ -13,11 +13,15 @@ import java.util.Map;
 
 class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
 
-    private static final String KEY_UPDATED_AT = "updated_at";
+    private static final String KEY_EXPERIMENT_ID = "experiment_id";
+    private static final String KEY_REVISION_NUMBER = "revision_number";
+    private static final String KEY_VARIANT_ID = "variant_id";
     private static final String KEY_BANNERS = "banners";
     private static final String KEY_INTERSTITIALS = "interstitials";
 
-    private String mUpdatedAt;
+    private String mExperimentId;
+    private int mRevisionNumber;
+    private String mVariantId;
     private ArrayList<AMBannerConfiguration> mBanners;
     private ArrayList<AMInterstitialConfiguration> mInterstitials;
 
@@ -26,8 +30,17 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
         mInterstitials = new ArrayList<>();
     }
 
-    public String getUpdateddAt() {
-        return mUpdatedAt;
+    public String getExperimentId() {
+        return mExperimentId;
+    }
+
+    public int getRevisionNumber() {
+        return mRevisionNumber;
+    }
+
+
+    public String getVariantId() {
+        return mVariantId;
     }
 
 
@@ -64,9 +77,18 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
         }
 
         try {
-            if (jsonObject.has(KEY_UPDATED_AT)) {
-                mUpdatedAt = jsonObject.getString(KEY_UPDATED_AT);
+            if (jsonObject.has(KEY_EXPERIMENT_ID)) {
+                mExperimentId = jsonObject.getString(KEY_EXPERIMENT_ID);
             }
+
+            if (jsonObject.has(KEY_REVISION_NUMBER)) {
+                mRevisionNumber = jsonObject.getInt(KEY_REVISION_NUMBER);
+            }
+
+            if (jsonObject.has(KEY_VARIANT_ID)) {
+                mVariantId = jsonObject.getString(KEY_VARIANT_ID);
+            }
+
             //parsing banner configuration
             parseBanner(jsonObject);
 
@@ -126,4 +148,8 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

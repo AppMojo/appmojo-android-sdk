@@ -7,8 +7,8 @@ import com.appmojo.sdk.utils.AMSharePrefs;
 
 
 class AMTokenHelper {
-    private static final String TOKEN_FILE_NAME = "auth_token";
-    private static final String PREF_KEY_TOKEN = "pref_key_token";
+    private static final String TOKEN_FILE_NAME = "com.appmojo.sdk.auth_token";
+    private static final String PREF_KEY_TOKEN = "com.appmojo.sdk.pref_key_token";
 
     private AMTokenHelper(){
     }

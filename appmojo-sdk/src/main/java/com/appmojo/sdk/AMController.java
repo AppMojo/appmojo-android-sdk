@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.appmojo.sdk.base.AMAdNetwork;
+import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.utils.AMLog;
 
 
@@ -53,15 +54,6 @@ abstract class AMController {
         return AMAdNetwork.UNKNOWN;
     }
 
-    public void onDestroy() {
-        AMLog.d("onDestroy controller...");
-        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mMessageReceiver);
-        mAppEngine = null;
-        mContext = null;
-        mAMView = null;
-        destroy();
-    }
-
     private void refreshAd(){
         AMLog.d("refreshAd...");
         try {
@@ -71,8 +63,26 @@ abstract class AMController {
         }
     }
 
+    protected void logActivity(AMEventType type) {
+        AMLog.d("log activity...");
+        if(mAMView != null && mCustomAdRequest != null) {
+            AMAppEngine.getInstance().logActivity(
+                    type, mAMView.getPlacementUid(), mCustomAdRequest.getAdUnitId());
+        }
+    }
+
+    public void onDestroy() {
+        AMLog.d("onDestroy controller...");
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mMessageReceiver);
+        mAppEngine = null;
+        mContext = null;
+        mAMView = null;
+        destroy();
+    }
+
     //Sub class implement
     public abstract void loadAd(AMAdRequest adRequest);
+    public abstract void  onVisibilityChanged(int isibility);
     public abstract void reloadAd();
     protected abstract void applyAdRequest(AMCustomAdRequest customAdRequest);
     protected abstract void destroy();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 
+import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.utils.AMLog;
 
 
@@ -16,6 +17,7 @@ class AMBannerController extends AMController {
     private AMBannerView mBannerView;
     private Handler mHandler;
     private Runnable mRefreshRunnable;
+    private int mVisibility = View.VISIBLE;
 
     public AMBannerController(Context context, AMView view) {
         super(context, view);
@@ -38,26 +40,30 @@ class AMBannerController extends AMController {
         AMLog.d("load banner ad...");
         mAdRequest = adRequest;
         String className = null;
-        try {
-            mCustomAdRequest = getApplyAdRequest(mAdRequest);
-            if(mCustomAdRequest != null) {
+
+        //get configuration
+        mCustomAdRequest = getApplyAdRequest(mAdRequest);
+
+        //create custom class to handle configuration
+        if(mCustomAdRequest != null) {
+            try {
                 className = AMClassFactory.getClassName(mCustomAdRequest.getAdNetwork(), AMAdType.BANNER);
                 mCustomBanner = AMCustomBannerFactory.create(className);
-                applyAdRequest(mCustomAdRequest);
-            } else {
-                AMLog.d("Cannot load banner because it has no configuration to be applied.");
-                notifyNotApplyConfiguration();
-                setViewVisibility(false);
+            } catch (Exception e) {
+                mCustomAdRequest = null;
+                AMLog.w("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
             }
-        } catch (Exception e) {
-            mCustomBanner = null;
-            AMLog.w("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
-            notifyNotApplyConfiguration();
-            setViewVisibility(false);
         }
 
+        //apply configuration
+        applyAdRequest(mCustomAdRequest);
     }
 
+
+    @Override
+    public void onVisibilityChanged(int visibility) {
+        this.mVisibility = visibility;
+    }
 
     @Override
     public void reloadAd() {
@@ -73,20 +79,21 @@ class AMBannerController extends AMController {
     @Override
     protected void applyAdRequest(AMCustomAdRequest adRequest) {
         AMLog.d("apply banner configuration...");
-        if(mCustomBanner != null) {
-            if (adRequest != null && adRequest instanceof AMBannerAdRequest) {
-                setViewVisibility(true);
-                scheduleRefreshTime((AMBannerAdRequest)adRequest);
-                mCustomBanner.loadBanner(mContext, mCustomListener, (AMBannerAdRequest)adRequest);
+        if(mCustomBanner != null && adRequest != null && adRequest instanceof AMBannerAdRequest) {
+            applyAutoHideView(false);
+            if(mVisibility == View.VISIBLE) {
+                mCustomBanner.loadBanner(mContext, mCustomListener, (AMBannerAdRequest) adRequest);
             } else {
-                AMLog.d("Cannot load banner because it has no configuration to be applied.");
-                notifyNotApplyConfiguration();
-                setViewVisibility(false);
+                AMLog.d("Banner is not visible. Not refreshing ad.");
             }
+            scheduleRefreshTime((AMBannerAdRequest)adRequest);
+
         } else {
-            AMLog.d("Cannot load banner. Have you ever called method loadAd()?");
+            if(mAMView != null) {
+                AMLog.w("No configuration to be applied for placement id: " + mAMView.getPlacementUid());
+            }
             notifyNotApplyConfiguration();
-            setViewVisibility(false);
+            applyAutoHideView(true);
         }
     }
 
@@ -98,12 +105,13 @@ class AMBannerController extends AMController {
         }
     }
 
-    private void setViewVisibility(boolean isVisible) {
+
+    private void applyAutoHideView(boolean isHide) {
         if(mBannerView != null && mBannerView.isAutoHideView()) {
-            if(isVisible) {
-                mBannerView.setVisibility(View.VISIBLE);
-            } else {
+            if(isHide) {
                 mBannerView.setVisibility(View.GONE);
+            } else {
+                mBannerView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -124,9 +132,9 @@ class AMBannerController extends AMController {
         if(mCustomBanner != null) {
             mCustomBanner.destroy();
         }
-        if(mHandler != null) {
-            mHandler.removeCallbacks(mRefreshRunnable);
-        }
+
+        cancelRefreshTime();
+
         if(mBannerView != null) {
             mBannerView.removeAllViews();
         }
@@ -167,9 +175,7 @@ class AMBannerController extends AMController {
     private void scheduleRefreshTime (AMBannerAdRequest adRequest) {
         int refreshRate = adRequest.getRefreshRate();
         if( refreshRate >= MINIMUM_REFRESH_RATE_SECOND) {
-            if(mHandler != null) {
-                mHandler.removeCallbacks(mRefreshRunnable);
-            }
+            cancelRefreshTime();
 
             if(mRefreshRunnable == null) {
                 mRefreshRunnable = createRunnable(adRequest);
@@ -193,6 +199,14 @@ class AMBannerController extends AMController {
     }
 
 
+    private void cancelRefreshTime() {
+        AMLog.d("Cancel refresh ad timer.");
+        if(mHandler != null) {
+            mHandler.removeCallbacks(mRefreshRunnable);
+        }
+    }
+
+
     //   _____ __  __ __  __             ____ _
     //  |_   _|  \ | |  | | | ___  __ __/ ___| | ____    ___  ___
     //    | | | \| | | \| | |/ _ \| |/ | |   | |/ _  \  / __|/ __|
@@ -206,14 +220,21 @@ class AMBannerController extends AMController {
             AMLog.i("Banner loaded...");
             setContentView(view);
 
+            //log activity
+            logActivity(AMEventType.IMPRESSION);
+
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdLoaded(mBannerView);
             }
+
+
         }
 
         @Override
         public void onCustomBannerFailed(int errCode) {
-            AMLog.w("Banner failed to load...");
+            if(mBannerView != null) {
+                AMLog.i("Banner failed to load on placement id: " + mBannerView.getPlacementUid());
+            }
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdFailed(mBannerView, errCode);
             }
@@ -228,6 +249,10 @@ class AMBannerController extends AMController {
 
         @Override
         public void onCustomBannerOpened() {
+            AMLog.i("Banner clicked...");
+            //log activity
+            logActivity(AMEventType.CLICK);
+
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdOpened(mBannerView);
             }

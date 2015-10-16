@@ -112,15 +112,14 @@ public class AMBannerView extends ViewGroup implements AMView {
     }
 
     @Override
-    public void destroy() {
-        mAMController.onDestroy();
-        mContext = null;
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        mAMController.onVisibilityChanged(visibility);
     }
 
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        destroy();
+    public void destroy() {
+        mAMController.onDestroy();
+        mContext = null;
     }
 
     private void initPreview(Context context, AttributeSet attrs, int defStyleAttr) {

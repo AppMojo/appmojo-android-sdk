@@ -17,4 +17,9 @@ public class AMConnectionResponse {
     public int getStatusCode() {
         return statusCode;
     }
+
+    @Override
+    public String toString() {
+        return String.format("statusCode: %s, response: %s", statusCode, response);
+    }
 }
