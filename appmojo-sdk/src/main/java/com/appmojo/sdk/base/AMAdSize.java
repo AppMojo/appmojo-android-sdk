@@ -1,39 +1,23 @@
 package com.appmojo.sdk.base;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.util.DisplayMetrics;
-import android.util.SparseArray;
 
-public enum AMAdSize {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    BANNER(0),
-    LARGE_BANNER(1),
-    FULL_BANNER(2),
-    LEADER_BOARD(3),
-    MEDIUM_RECTANGLE(4),
-    WIDE_SKYSCRAPER(5),
-    SMART_BANNER(6);
-
-    int value = -1;
-    private static final SparseArray<AMAdSize> sValues = new SparseArray<AMAdSize>();
-
-    static {
-        for (AMAdSize type : AMAdSize.values()) {
-            sValues.put(type.value, type);
-        }
-    }
-
-    AMAdSize(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return this.value;
-    }
-
-    public static AMAdSize forValue(int value) {
-        return sValues.get(value);
-    }
+public class AMAdSize {
+    @IntDef({BANNER, LARGE_BANNER, FULL_BANNER, LEADER_BOARD, MEDIUM_RECTANGLE, WIDE_SKYSCRAPER, SMART_BANNER})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Size {}
+    public static final int BANNER = 0;
+    public static final int LARGE_BANNER = 1;
+    public static final int FULL_BANNER = 2;
+    public static final int LEADER_BOARD = 3;
+    public static final int MEDIUM_RECTANGLE = 4;
+    public static final int WIDE_SKYSCRAPER = 5;
+    public static final int SMART_BANNER = 6;
 
     /**
      * get Ad size in size
@@ -41,7 +25,7 @@ public enum AMAdSize {
      * @param adSize :  ad size
      * @return array that contain width and height respective
      */
-    public static int[] getAdSizePixel(Context context, AMAdSize adSize) {
+    public static int[] getAdSizePixel(Context context, @Size int adSize) {
         int[] size = new int[2];
         DisplayMetrics displayMetrics =  context.getResources().getDisplayMetrics();
         int h = (int)(50 * displayMetrics.density);

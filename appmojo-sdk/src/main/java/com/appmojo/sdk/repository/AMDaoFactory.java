@@ -3,23 +3,23 @@ package com.appmojo.sdk.repository;
 
 import android.content.Context;
 
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 
 class AMDaoFactory {
 
     private AMDaoFactory(){
     }
 
-    public static AMDao createDao(Context context, AMEventType type) {
-        if(type == AMEventType.SESSION) {
+    public static AMDao createDao(Context context, @AMEvent.Type int type) {
+        if(type == AMEvent.SESSION) {
             return new AMSessionDao(context);
         }
 
-        if(type == AMEventType.IMPRESSION) {
+        if(type == AMEvent.IMPRESSION) {
             return new AMImpressionDao(context);
         }
 
-        if(type == AMEventType.CLICK) {
+        if(type == AMEvent.CLICK) {
             return new AMClickDao(context);
         }
 

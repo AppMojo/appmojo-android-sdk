@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.appmojo.sdk.base.AMAdNetwork;
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.utils.AMLog;
 
 
@@ -47,7 +47,8 @@ abstract class AMController {
         return null;
     }
 
-    public AMAdNetwork getAdNetwork() {
+    @AMAdNetwork.Network
+    public String getAdNetwork() {
         if(mCustomAdRequest != null) {
             return mCustomAdRequest.getAdNetwork();
         }
@@ -63,7 +64,7 @@ abstract class AMController {
         }
     }
 
-    protected void logActivity(AMEventType type) {
+    protected void logActivity(@AMEvent.Type int type) {
         AMLog.d("log activity...");
         if(mAMView != null && mCustomAdRequest != null) {
             AMAppEngine.getInstance().logActivity(

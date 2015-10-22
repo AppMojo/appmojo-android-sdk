@@ -98,7 +98,7 @@ class AMAdMobBannerAdapter extends AMCustomBanner {
         mAdMobListener = null;
     }
 
-    private AdSize parseAdSize(AMAdSize adSize) {
+    private AdSize parseAdSize(@AMAdSize.Size int adSize) {
         AdSize size;
         if (adSize == AMAdSize.LARGE_BANNER) {
             size = AdSize.LARGE_BANNER;

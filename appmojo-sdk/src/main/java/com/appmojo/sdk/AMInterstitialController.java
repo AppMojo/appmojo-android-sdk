@@ -2,7 +2,7 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.utils.AMLog;
 
 
@@ -176,7 +176,7 @@ class AMInterstitialController  extends AMController {
 
         @Override
         public void onCustomInterstitialShown() {
-            logActivity(AMEventType.IMPRESSION);
+            logActivity(AMEvent.IMPRESSION);
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMInterstitialListener)getAMView().getListener()).onAdOpened(mAMInterstitial);
             }

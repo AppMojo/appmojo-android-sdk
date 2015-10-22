@@ -17,7 +17,7 @@ class AMCustomAdRequest {
     private String contentUrl;
     private Location location;
     private String requestAgent;
-    private AMAdNetwork adNetwork;
+    private @AMAdNetwork.Network String adNetwork;
     private final Set<String> keywords;
     private final Set<String> testDeviceIds;
 
@@ -50,9 +50,10 @@ class AMCustomAdRequest {
 
     void setBirthday(Date birthday) { this.birthday = birthday; }
 
-    public AMAdNetwork getAdNetwork() { return adNetwork; }
+    @AMAdNetwork.Network
+    public String getAdNetwork() { return adNetwork; }
 
-    public void setAdNetwork(AMAdNetwork adNetwork) {
+    public void setAdNetwork(@AMAdNetwork.Network String adNetwork) {
         this.adNetwork = adNetwork;
     }
 

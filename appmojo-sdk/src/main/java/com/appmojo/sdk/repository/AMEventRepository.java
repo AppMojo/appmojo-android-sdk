@@ -4,7 +4,6 @@ package com.appmojo.sdk.repository;
 import android.content.Context;
 
 import com.appmojo.sdk.events.AMEvent;
-import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.repository.criterias.AMCriteria;
 import com.appmojo.sdk.utils.AMLog;
 
@@ -37,7 +36,7 @@ public class AMEventRepository {
     }
 
 
-    public List<AMEvent> get(AMEventType type, AMCriteria criteria) {
+    public List<AMEvent> get(@AMEvent.Type int type, AMCriteria criteria) {
         List<AMEvent> events = null;
         AMDao amDao = AMDaoFactory.createDao(mContext, type);
         try {
@@ -55,7 +54,7 @@ public class AMEventRepository {
     }
 
 
-    public List<AMEvent> get(AMEventType type) {
+    public List<AMEvent> get(@AMEvent.Type int type) {
         List<AMEvent> events = null;
         AMDao amDao = AMDaoFactory.createDao(mContext, type);
         try {
@@ -73,7 +72,7 @@ public class AMEventRepository {
     }
 
 
-    public AMEvent getLastItem(AMEventType type) {
+    public AMEvent getLastItem(@AMEvent.Type int type) {
         AMEvent event = null;
         AMDao amDao = AMDaoFactory.createDao(mContext, type);
         try {
@@ -109,7 +108,7 @@ public class AMEventRepository {
     }
 
 
-    public int delete(AMEventType type, long id) {
+    public int delete(@AMEvent.Type int type, long id) {
         int number = 0;
         AMDao amDao = AMDaoFactory.createDao(mContext, type);
         try {
@@ -127,7 +126,7 @@ public class AMEventRepository {
     }
 
 
-    public int delete(AMEventType type, AMCriteria criteria) {
+    public int delete(@AMEvent.Type int type, AMCriteria criteria) {
         int number = 0;
         AMDao amDao = AMDaoFactory.createDao(mContext, type);
         try {

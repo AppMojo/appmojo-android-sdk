@@ -37,11 +37,12 @@ class AMAdTarget {
         this.contentUrl = contentUrl;
     }
 
+    @AMAdRequest.Gender
     public int getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(@AMAdRequest.Gender int gender) {
         this.gender = gender;
     }
 

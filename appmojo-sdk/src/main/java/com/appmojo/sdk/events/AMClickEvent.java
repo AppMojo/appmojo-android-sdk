@@ -3,8 +3,8 @@ package com.appmojo.sdk.events;
 public class AMClickEvent extends AMActivityEvent {
 
     @Override
-    public AMEventType getType() {
-        return AMEventType.CLICK;
+    public int getType() {
+        return AMEvent.CLICK;
     }
 
     @Override

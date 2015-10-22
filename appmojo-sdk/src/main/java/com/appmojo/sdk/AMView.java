@@ -13,7 +13,8 @@ interface AMView {
 
     String getPlacementUid();
 
-    AMAdNetwork getAdNetwork();
+    @AMAdNetwork.Network
+    String getAdNetwork();
 
     AMListener getListener();
 

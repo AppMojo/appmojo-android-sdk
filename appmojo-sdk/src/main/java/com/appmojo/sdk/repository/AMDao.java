@@ -134,7 +134,7 @@ abstract class AMDao {
     private String getActivityWhereClause(AMActivityCriteria actCriteria) {
         //Event type MUST have.
         String where = String.format(Locale.getDefault(), CONDITION_NUMBER_FORMAT,
-                AMSQLiteHelper.COLUMN_TYPE, actCriteria.getActivityType().getValue());
+                AMSQLiteHelper.COLUMN_TYPE, actCriteria.getActivityType());
 
         if (actCriteria.getExperimentId() != null) {
             where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,

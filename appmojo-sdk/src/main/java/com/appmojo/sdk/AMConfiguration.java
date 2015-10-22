@@ -16,7 +16,7 @@ class AMConfiguration implements AMJsonParser<AMConfiguration>{
 
     private String placementId;
     private String adUnitId;
-    private AMAdNetwork adNetwork;
+    private @AMAdNetwork.Network String adNetwork;
 
     public void setAdUnitId(String adUnitId){
         this.adUnitId = adUnitId;
@@ -26,11 +26,12 @@ class AMConfiguration implements AMJsonParser<AMConfiguration>{
         return adUnitId;
     }
 
-    public AMAdNetwork getAdNetwork() {
+    @AMAdNetwork.Network
+    public String getAdNetwork() {
         return adNetwork;
     }
 
-    public void setAdNetwork(AMAdNetwork adNetwork) {
+    public void setAdNetwork(@AMAdNetwork.Network String adNetwork) {
         this.adNetwork = adNetwork;
     }
 
@@ -83,8 +84,8 @@ class AMConfiguration implements AMJsonParser<AMConfiguration>{
             }
 
             if (jsonObject.has(KEY_AD_NETWORK)) {
-                this.setAdNetwork(AMAdNetwork
-                        .forValue(jsonObject.getString(KEY_AD_NETWORK)));
+                String network = jsonObject.getString(KEY_AD_NETWORK);
+                this.setAdNetwork(AMAdNetwork.forValue(network));
             }
 
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import com.appmojo.sdk.events.AMActivityEvent;
 import com.appmojo.sdk.events.AMClickEvent;
 import com.appmojo.sdk.events.AMEvent;
-import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.events.AMImpressionEvent;
 import com.appmojo.sdk.repository.criterias.AMActivityCriteria;
 import com.appmojo.sdk.repository.AMEventRepository;
@@ -47,7 +46,7 @@ class AMActivityTracker {
     }
 
 
-    public synchronized void logActivity(AMEventType type, String placementId, String adUnitId) {
+    public synchronized void logActivity(@AMEvent.Type int type, String placementId, String adUnitId) {
         Calendar calendar = getCalendar();
         SimpleDateFormat dateFormat = getDateFormat();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -83,12 +82,12 @@ class AMActivityTracker {
         }
     }
 
-    private AMActivityEvent createActivityEventObject(AMEventType type) {
-        if(type == AMEventType.IMPRESSION) {
+    private AMActivityEvent createActivityEventObject(@AMEvent.Type int type) {
+        if(type == AMEvent.IMPRESSION) {
             return new AMImpressionEvent();
         }
 
-        if(type == AMEventType.CLICK) {
+        if(type == AMEvent.CLICK) {
             return new AMClickEvent();
         }
 
@@ -112,7 +111,7 @@ class AMActivityTracker {
     }
 
 
-    private AMEvent getPreviousData(AMEventType type, String placementId,
+    private AMEvent getPreviousData(@AMEvent.Type int type, String placementId,
                                 String adUnitId, String activeDate, int activeHour) {
         AMEvent event = null;
         AMActivityCriteria criteria = new AMActivityCriteria(type);

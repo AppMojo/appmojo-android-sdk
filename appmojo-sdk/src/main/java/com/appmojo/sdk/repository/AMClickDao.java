@@ -6,7 +6,6 @@ import android.database.Cursor;
 
 import com.appmojo.sdk.events.AMClickEvent;
 import com.appmojo.sdk.events.AMEvent;
-import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.repository.criterias.AMCriteria;
 import com.appmojo.sdk.utils.AMLog;
 
@@ -23,7 +22,7 @@ class AMClickDao extends AMDao {
     @Override
     public List<AMEvent> getItem() {
         return query(AMSQLiteHelper.TABLE_ACTIVITIES,
-                null, String.format("%s=%s", AMSQLiteHelper.COLUMN_TYPE,  AMEventType.CLICK.getValue()),
+                null, String.format("%s=%s", AMSQLiteHelper.COLUMN_TYPE,  AMEvent.CLICK),
                 null, null, null, null, null);
     }
 
@@ -38,7 +37,7 @@ class AMClickDao extends AMDao {
     @Override
     public AMEvent getLastItem() {
         List<AMEvent> events = query(AMSQLiteHelper.TABLE_ACTIVITIES,
-                null, String.format("%s=%s", AMSQLiteHelper.COLUMN_TYPE,  AMEventType.CLICK.getValue()),
+                null, String.format("%s=%s", AMSQLiteHelper.COLUMN_TYPE,  AMEvent.CLICK),
                 null,  null,  null,  AMSQLiteHelper.COLUMN_ID + " DESC",  "1");
         if(events != null && !events.isEmpty()) {
             return events.get(0);
@@ -62,7 +61,7 @@ class AMClickDao extends AMDao {
             values.put(AMSQLiteHelper.COLUMN_AD_UNIT_ID, clkEvent.getAdUnitId());
             values.put(AMSQLiteHelper.COLUMN_ACT_DATE, clkEvent.getDate());
             values.put(AMSQLiteHelper.COLUMN_HOUR, clkEvent.getAtHour());
-            values.put(AMSQLiteHelper.COLUMN_TYPE, clkEvent.getType().getValue());
+            values.put(AMSQLiteHelper.COLUMN_TYPE, clkEvent.getType());
             values.put(AMSQLiteHelper.COLUMN_ACT_COUNT, clkEvent.getCount());
             values.put(AMSQLiteHelper.COLUMN_TRANSACTION_ID, clkEvent.getTransactionId());
 
@@ -88,7 +87,7 @@ class AMClickDao extends AMDao {
             values.put(AMSQLiteHelper.COLUMN_AD_UNIT_ID, clkEvent.getAdUnitId());
             values.put(AMSQLiteHelper.COLUMN_ACT_DATE, clkEvent.getDate());
             values.put(AMSQLiteHelper.COLUMN_HOUR, clkEvent.getAtHour());
-            values.put(AMSQLiteHelper.COLUMN_TYPE, clkEvent.getType().getValue());
+            values.put(AMSQLiteHelper.COLUMN_TYPE, clkEvent.getType());
             values.put(AMSQLiteHelper.COLUMN_ACT_COUNT, clkEvent.getCount());
             values.put(AMSQLiteHelper.COLUMN_TRANSACTION_ID, clkEvent.getTransactionId());
 

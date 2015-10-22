@@ -46,7 +46,8 @@ public class AMInterstitial implements AMView {
     }
 
     @Override
-    public AMAdNetwork getAdNetwork() {
+    @AMAdNetwork.Network
+    public String getAdNetwork() {
         return mAMController.getAdNetwork();
     }
 

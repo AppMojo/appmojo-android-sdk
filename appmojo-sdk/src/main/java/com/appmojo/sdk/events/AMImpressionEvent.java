@@ -3,8 +3,8 @@ package com.appmojo.sdk.events;
 public class AMImpressionEvent extends AMActivityEvent {
 
     @Override
-    public AMEventType getType() {
-        return AMEventType.IMPRESSION;
+    public int getType() {
+        return AMEvent.IMPRESSION;
     }
 
 

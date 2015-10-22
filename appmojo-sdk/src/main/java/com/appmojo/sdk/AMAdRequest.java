@@ -1,12 +1,18 @@
 package com.appmojo.sdk;
 
 import android.location.Location;
+import android.support.annotation.IntDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Date;
 import java.util.Set;
 
 
 public class AMAdRequest {
+    @IntDef({GENDER_MALE, GENDER_FEMALE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Gender {}
     public static final int GENDER_MALE = 1;
     public static final int GENDER_FEMALE = 2;
 
@@ -24,6 +30,7 @@ public class AMAdRequest {
         return this.mTarget.getContentUrl();
     }
 
+    @Gender
     public int getGender() {
         return this.mTarget.getGender();
     }
@@ -67,7 +74,7 @@ public class AMAdRequest {
             return this;
         }
 
-        public AMAdRequest.Builder setGender(int gender) {
+        public AMAdRequest.Builder setGender(@Gender int gender) {
             this.adTarget.setGender(gender);
             return this;
         }

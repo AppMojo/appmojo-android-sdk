@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.utils.AMLog;
 
 
@@ -221,7 +221,7 @@ class AMBannerController extends AMController {
             setContentView(view);
 
             //log activity
-            logActivity(AMEventType.IMPRESSION);
+            logActivity(AMEvent.IMPRESSION);
 
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdLoaded(mBannerView);
@@ -251,7 +251,7 @@ class AMBannerController extends AMController {
         public void onCustomBannerOpened() {
             AMLog.i("Banner clicked...");
             //log activity
-            logActivity(AMEventType.CLICK);
+            logActivity(AMEvent.CLICK);
 
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdOpened(mBannerView);

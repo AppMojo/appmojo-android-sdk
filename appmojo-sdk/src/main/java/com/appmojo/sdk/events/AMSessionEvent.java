@@ -30,8 +30,8 @@ public class AMSessionEvent extends AMEvent implements Serializable{
     private int revisionNumber;
 
     @Override
-    public AMEventType getType() {
-        return AMEventType.SESSION;
+    public int getType() {
+        return AMEvent.SESSION;
     }
 
 

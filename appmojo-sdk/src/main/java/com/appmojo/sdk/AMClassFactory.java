@@ -9,8 +9,8 @@ class AMClassFactory {
     private AMClassFactory(){
     }
 
-    public static String getClassName(AMAdNetwork adNetwork, AMAdType adType) {
-        if(adNetwork == AMAdNetwork.ADMOB) {
+    public static String getClassName(@AMAdNetwork.Network String adNetwork, @AMAdType.Type int adType) {
+        if(AMAdNetwork.ADMOB.equalsIgnoreCase(adNetwork)) {
             if(adType == AMAdType.BANNER) {
                 return "com.appmojo.sdk.AMAdMobBannerAdapter";
             } else {

@@ -7,7 +7,6 @@ import com.appmojo.sdk.connections.AMConnectionListener;
 import com.appmojo.sdk.errors.AMError;
 import com.appmojo.sdk.events.AMActivityEvent;
 import com.appmojo.sdk.events.AMEvent;
-import com.appmojo.sdk.events.AMEventType;
 import com.appmojo.sdk.events.AMSessionEvent;
 import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.repository.criterias.AMActivityCriteria;
@@ -30,9 +29,6 @@ import java.util.TimeZone;
 
 
 class AMEventDelivery {
-
-    private static final String TAG = "AMEventDelivery";
-
     private Context mContext;
     private AMConnectionHelper mConnectionHelper;
     private boolean isStarted;
@@ -61,12 +57,11 @@ class AMEventDelivery {
     }
 
 
-    private AMEventType getNextType() {
-        AMEventType type = null;
+    private int getNextType() {
+        int type = -1;
         index++;
-        AMEventType[] eventTypes = AMEventType.values();
-        if(index < eventTypes.length) {
-            type = eventTypes[index];
+        if(index < AMEvent.TYPE.length) {
+            type = AMEvent.TYPE[index];
         }
         return type;
     }
@@ -75,12 +70,12 @@ class AMEventDelivery {
     private void deliverNextEvent() {
         //Is internet available?
         if(AMConnectionUtils.isOnline()) {
-            AMEventType type = getNextType();
-            if (type == AMEventType.SESSION) {
+            int type = getNextType();
+            if (type == AMEvent.SESSION) {
                 deliverSessionEvent();
-            } else if (type == AMEventType.IMPRESSION) {
+            } else if (type == AMEvent.IMPRESSION) {
                 deliverClickEvent();
-            } else if (type == AMEventType.CLICK) {
+            } else if (type == AMEvent.CLICK) {
                 deliverImpressEvent();
             } else { //no deliver event
                 index = -1;
@@ -95,7 +90,7 @@ class AMEventDelivery {
 
 
     private void deliverSessionEvent() {
-        List<AMEvent> events = mEventRepository.get(AMEventType.SESSION);
+        List<AMEvent> events = mEventRepository.get(AMEvent.SESSION);
         if(events != null && !events.isEmpty()) {
             AMSessionEvent ssEvent;
             long currentTime = System.currentTimeMillis();
@@ -108,7 +103,7 @@ class AMEventDelivery {
             }
 
             String body = createSessionBody(events);
-            sendEvent(AMEventType.SESSION, AMBaseConfiguration.getUrlSession(mAppId), body);
+            sendEvent(AMEvent.SESSION, AMBaseConfiguration.getUrlSession(mAppId), body);
         } else {
             deliverNextEvent();
         }
@@ -116,14 +111,14 @@ class AMEventDelivery {
 
 
     private void deliverClickEvent() {
-        List<AMEvent> events = mEventRepository.get(AMEventType.CLICK);
+        List<AMEvent> events = mEventRepository.get(AMEvent.CLICK);
         if(events != null && !events.isEmpty()) {
             //filter only in-active event
             events = filterInactiveActivity(events);
             //create body
             String body = createActivityBody(events);
             //deliver event
-            sendEvent(AMEventType.CLICK, AMBaseConfiguration.getUrlActivities(mAppId), body);
+            sendEvent(AMEvent.CLICK, AMBaseConfiguration.getUrlActivities(mAppId), body);
         } else {
             deliverNextEvent();
         }
@@ -131,21 +126,21 @@ class AMEventDelivery {
 
 
     private void deliverImpressEvent() {
-        List<AMEvent> events = mEventRepository.get(AMEventType.IMPRESSION);
+        List<AMEvent> events = mEventRepository.get(AMEvent.IMPRESSION);
         if(events != null && !events.isEmpty()) {
             //filter only in-active event
             events = filterInactiveActivity(events);
             //create body
             String body = createActivityBody(events);
             //deliver event
-            sendEvent(AMEventType.IMPRESSION, AMBaseConfiguration.getUrlActivities(mAppId), body);
+            sendEvent(AMEvent.IMPRESSION, AMBaseConfiguration.getUrlActivities(mAppId), body);
         } else {
             deliverNextEvent();
         }
     }
 
 
-    private void sendEvent(final AMEventType type, String url, String body) {
+    private void sendEvent(@AMEvent.Type final int type, String url, String body) {
         Map<String, String> headers = getHeaderData();
         mConnectionHelper.put(url, headers, body, new AMConnectionListener() {
             @Override
@@ -160,19 +155,19 @@ class AMEventDelivery {
         });
     }
 
-    private void onDeliverSuccess(final AMEventType type, AMConnectionResponse response) {
+    private void onDeliverSuccess(@AMEvent.Type int type, AMConnectionResponse response) {
         try {
             AMLog.i(response.toString());
             JSONArray jsonArray = new JSONArray(response.getResponse());
             AMCriteria criteria = null;
             for(int i = 0 ; i < jsonArray.length() ; i++) {
                 String value = jsonArray.getString(i);
-                if(type == AMEventType.SESSION) {
+                if(type == AMEvent.SESSION) {
                     criteria = new AMCriteria();
                     criteria.setSessionId(value);
                 }
 
-                if(type == AMEventType.IMPRESSION || type == AMEventType.CLICK) {
+                if(type == AMEvent.IMPRESSION || type == AMEvent.CLICK) {
                     criteria = new AMActivityCriteria(type);
                     ((AMActivityCriteria)criteria).setTransactionId(value);
                 }

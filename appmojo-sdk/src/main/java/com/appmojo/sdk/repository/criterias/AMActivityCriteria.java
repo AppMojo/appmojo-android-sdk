@@ -1,10 +1,10 @@
 package com.appmojo.sdk.repository.criterias;
 
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 
 public class AMActivityCriteria extends  AMCriteria {
 
-    private AMEventType type;
+    private int type;
     private String experimentId;
     private String variantId;
     private int revisionId;
@@ -14,7 +14,7 @@ public class AMActivityCriteria extends  AMCriteria {
     private String date;
     private int hour;
 
-    public AMActivityCriteria(AMEventType type) {
+    public AMActivityCriteria(@AMEvent.Type int type) {
         this.type = type;
         this.hour = -1;
         this.revisionId = -1;
@@ -28,7 +28,8 @@ public class AMActivityCriteria extends  AMCriteria {
         this.experimentId = experimentId;
     }
 
-    public AMEventType getActivityType() {
+    @AMEvent.Type
+    public int getActivityType() {
         return type;
     }
 

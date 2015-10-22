@@ -8,7 +8,7 @@ class AMViewControllerFactory {
     private AMViewControllerFactory(){
     }
 
-    static AMController create(Context context, AMView amObj, AMAdType type) {
+    static AMController create(Context context, AMView amObj, @AMAdType.Type int type) {
         AMController controller = null;
         if(type == AMAdType.BANNER) {
             controller = new AMBannerController(context, amObj);

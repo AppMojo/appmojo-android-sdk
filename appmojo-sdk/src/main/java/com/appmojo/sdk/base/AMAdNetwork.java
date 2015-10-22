@@ -1,35 +1,34 @@
 package com.appmojo.sdk.base;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import android.support.annotation.StringDef;
 
-public enum AMAdNetwork {
-    UNKNOWN("UNKNOWN"),
-    ADMOB("ADMOB"),
-    AMAZON("AMAZON");
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    String value = null;
-    private static final Map<String, AMAdNetwork> sValues = new HashMap<>();
+public class AMAdNetwork {
 
-    static {
-        for (AMAdNetwork type : AMAdNetwork.values()) {
-            sValues.put(type.value, type);
+    @StringDef({UNKNOWN, ADMOB, AMAZON})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Network {}
+    public static final String UNKNOWN = "UNKNOWN";
+    public static final String ADMOB = "ADMOB";
+    public static final String AMAZON = "AMAZON";
+
+
+    @Network
+    public static String forValue(String value) {
+        if(value == null) {
+            return AMAdNetwork.UNKNOWN;
         }
-    }
 
-    AMAdNetwork(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
-    public static AMAdNetwork forValue(String value) {
-        if(value != null) {
-            return sValues.get(value.toUpperCase(Locale.US));
+        if(ADMOB.equalsIgnoreCase(value)) {
+            return ADMOB;
         }
-        return UNKNOWN;
+
+        if(AMAZON.equalsIgnoreCase(value)) {
+            return AMAZON;
+        }
+
+        return AMAdNetwork.UNKNOWN;
     }
 }

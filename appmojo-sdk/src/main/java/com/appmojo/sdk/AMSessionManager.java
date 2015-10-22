@@ -3,7 +3,7 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.events.AMSessionEvent;
 import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.utils.AMLog;
@@ -11,7 +11,7 @@ import com.appmojo.sdk.utils.AMLog;
 import java.util.UUID;
 
 class AMSessionManager {
-    private static final long SESSION_TIME = 5*60*1000L; //30 minutes
+    private static final long SESSION_TIME = 30*60*1000L; //30 minutes
 
     private Context mContext;
     private long mSessionLifeTime = SESSION_TIME;
@@ -122,7 +122,7 @@ class AMSessionManager {
 
     private AMSessionEvent getLastSession() {
         if(mEventRepository != null) {
-            return (AMSessionEvent) mEventRepository.getLastItem(AMEventType.SESSION);
+            return (AMSessionEvent) mEventRepository.getLastItem(AMEvent.SESSION);
         }
         return null;
     }

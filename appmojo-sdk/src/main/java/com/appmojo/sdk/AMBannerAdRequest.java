@@ -5,7 +5,7 @@ import com.appmojo.sdk.base.AMAdSize;
 
 class AMBannerAdRequest extends AMCustomAdRequest {
 
-    private AMAdSize adSize;
+    private int adSize;
     private int refreshRate;
 
 
@@ -29,11 +29,12 @@ class AMBannerAdRequest extends AMCustomAdRequest {
         this.refreshRate = refreshRate;
     }
 
-    public AMAdSize getAdSize() {
+    @AMAdSize.Size
+    public int getAdSize() {
         return adSize;
     }
 
-    public void setAdSize(AMAdSize adSize) {
+    public void setAdSize(@AMAdSize.Size int adSize) {
         this.adSize = adSize;
     }
 

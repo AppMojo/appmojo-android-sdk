@@ -6,7 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.appmojo.sdk.connections.AMResponseListener;
 import com.appmojo.sdk.errors.AMError;
-import com.appmojo.sdk.events.AMEventType;
+import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.utils.AMLog;
 
@@ -224,7 +224,7 @@ public class AMAppEngine implements AMEventTriggerListener {
     /**
      * This method was will log the all activity to the database.
      */
-    public void logActivity(AMEventType type, String placementId, String adUnitId) {
+    public void logActivity(@AMEvent.Type int type, String placementId, String adUnitId) {
         String experimentId = AMConfigurationHelper.readExperimentId(mContext);
         if(experimentId == null || experimentId.length() < 1) {
             AMLog.w("No running experiment, activity will not be logged ...");

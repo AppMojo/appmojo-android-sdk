@@ -21,7 +21,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private AMController mAMController;
     private String mPlacementUid;
     private AMListener mListener;
-    private AMAdSize mAdSize = AMAdSize.BANNER;
+    private int mAdSize = AMAdSize.BANNER;
     private Context mContext;
     private boolean mShouldAutoHide;
 
@@ -51,11 +51,12 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     }
 
-    public void setAdSize(AMAdSize size) {
+    public void setAdSize(@AMAdSize.Size int size) {
         mAdSize = size;
     }
 
-    public AMAdSize getAdSize() {
+    @AMAdSize.Size
+    public int getAdSize() {
         return this.mAdSize;
     }
 
@@ -96,7 +97,8 @@ public class AMBannerView extends ViewGroup implements AMView {
     }
 
     @Override
-    public AMAdNetwork getAdNetwork() {
+    @AMAdNetwork.Network
+    public String getAdNetwork() {
         return mAMController.getAdNetwork();
     }
 
