@@ -4,12 +4,12 @@
 
 
     <!--Ads-->
-    <string name="app_id">YOUR-APP-ID</string>
-    <string name="app_secret">YOUR-APP-SECRET</string>
+    <string name="app_id" tools:ignore="TypographyDashes">YOUR-APP-ID</string>
+    <string name="app_secret" tools:ignore="TypographyDashes">YOUR-APP-SECRET</string>
 
     <!--ads placement id-->
-    <string name="ad_placement_id_one" tools:ignore="TypographyDashes">app-123456789-12341</string>
-    <string name="ad_placement_id_two" tools:ignore="TypographyDashes">app-123456789-12342</string>
+    <string name="ad_placement_id_one" tools:ignore="TypographyDashes">YOUR-PLACEMENT_ID</string>
+    <string name="ad_placement_id_two" tools:ignore="TypographyDashes">YOUR-PLACEMENT_ID</string>
 
     <!--test device id-->
     <string name="device_id">YOUR-TEST-DEVICE-ID</string>

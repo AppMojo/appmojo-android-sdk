@@ -13,17 +13,19 @@ public abstract class AMEvent {
     @IntDef({SESSION, CLICK, IMPRESSION})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {}
-
     public static final int SESSION = 0;
     public static final int CLICK = 1;
     public static final int IMPRESSION = 2;
 
+    protected long id = -1;
+    private static final int []  TYPE = new int[]{SESSION, CLICK, IMPRESSION};
+
     @Type
     public abstract int getType();
 
-    public static final int []  TYPE = new int[]{SESSION, CLICK, IMPRESSION};
-
-    protected long id = -1;
+    public static int[] getTypes() {
+        return TYPE;
+    }
 
     public long getId() {
         return id;

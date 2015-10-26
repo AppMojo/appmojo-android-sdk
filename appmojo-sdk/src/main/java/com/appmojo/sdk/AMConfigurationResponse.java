@@ -147,9 +147,4 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
 
         }
     }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

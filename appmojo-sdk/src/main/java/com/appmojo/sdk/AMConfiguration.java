@@ -14,9 +14,9 @@ class AMConfiguration implements AMJsonParser<AMConfiguration>{
     protected static final String KEY_AD_NETWORK = "ad_network";
     protected static final String KEY_AD_UNIT_ID = "ad_unit_id";
 
+    @AMAdNetwork.Network private String adNetwork;
     private String placementId;
     private String adUnitId;
-    private @AMAdNetwork.Network String adNetwork;
 
     public void setAdUnitId(String adUnitId){
         this.adUnitId = adUnitId;

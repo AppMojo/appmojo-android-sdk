@@ -17,9 +17,9 @@ class AMCustomAdRequest {
     private String contentUrl;
     private Location location;
     private String requestAgent;
-    private @AMAdNetwork.Network String adNetwork;
     private final Set<String> keywords;
     private final Set<String> testDeviceIds;
+    @AMAdNetwork.Network private  String adNetwork;
 
     AMCustomAdRequest() {
         keywords = new HashSet<>();

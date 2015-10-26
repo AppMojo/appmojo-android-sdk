@@ -60,8 +60,8 @@ class AMEventDelivery {
     private int getNextType() {
         int type = -1;
         index++;
-        if(index < AMEvent.TYPE.length) {
-            type = AMEvent.TYPE[index];
+        if(index < AMEvent.getTypes().length) {
+            type = AMEvent.getTypes()[index];
         }
         return type;
     }
