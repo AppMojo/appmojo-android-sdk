@@ -11,7 +11,7 @@ import com.appmojo.sdk.utils.AMLog;
 import java.util.UUID;
 
 class AMSessionManager {
-    private static final long SESSION_TIME = 2*60*1000L; //30 minutes
+    private static final long SESSION_TIME = 30*60*1000L; //30 minutes
 
     private Context mContext;
     private long mSessionLifeTime = SESSION_TIME;

@@ -11,7 +11,6 @@ import com.appmojo.sdk.events.AMSessionEvent;
 import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.repository.criterias.AMActivityCriteria;
 import com.appmojo.sdk.repository.criterias.AMCriteria;
-import com.appmojo.sdk.utils.AMConnectionUtils;
 import com.appmojo.sdk.utils.AMLog;
 
 import org.json.JSONArray;
@@ -68,21 +67,14 @@ class AMEventDelivery {
 
 
     private void deliverNextEvent() {
-        //Is internet available?
-        if(AMConnectionUtils.isOnline()) {
-            int type = getNextType();
-            if (type == AMEvent.SESSION) {
-                deliverSessionEvent();
-            } else if (type == AMEvent.IMPRESSION) {
-                deliverClickEvent();
-            } else if (type == AMEvent.CLICK) {
-                deliverImpressEvent();
-            } else { //no deliver event
-                index = -1;
-                isStarted = false;
-            }
-        } else {
-            AMLog.w("Delivery has been stop, no internet connection.");
+        int type = getNextType();
+        if (type == AMEvent.SESSION) {
+            deliverSessionEvent();
+        } else if (type == AMEvent.IMPRESSION) {
+            deliverClickEvent();
+        } else if (type == AMEvent.CLICK) {
+            deliverImpressEvent();
+        } else { //no deliver event
             index = -1;
             isStarted = false;
         }
