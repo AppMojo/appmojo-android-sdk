@@ -78,9 +78,9 @@ class AMSQLiteHelper extends SQLiteOpenHelper {
         builder.append(COLUMN_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ");
         builder.append(COLUMN_DEVICE_ID).append(" TEXT NOT NULL, ");
         builder.append(COLUMN_SESSION_ID).append(" TEXT NOT NULL, ");
-        builder.append(COLUMN_EXPERIMENT_ID).append(" TEXT NOT NULL, ");
-        builder.append(COLUMN_VARIANT_ID).append(" TEXT NOT NULL, ");
-        builder.append(COLUMN_REVISION_NUMBER).append(" INTEGER DEFAULT 0, ");
+        builder.append(COLUMN_EXPERIMENT_ID).append(" TEXT, ");
+        builder.append(COLUMN_VARIANT_ID).append(" TEXT, ");
+        builder.append(COLUMN_REVISION_NUMBER).append(" INTEGER, ");
         builder.append(COLUMN_SESSION_START_TIME).append(" INTEGER DEFAULT 0, ");
         builder.append(COLUMN_SESSION_EXPIRY_TIME).append(" INTEGER DEFAULT 0, ");
         builder.append(COLUMN_SESSION_DURATION).append(" INTEGER DEFAULT 0");

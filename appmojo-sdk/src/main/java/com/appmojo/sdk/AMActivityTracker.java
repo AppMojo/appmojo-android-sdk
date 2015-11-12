@@ -7,32 +7,21 @@ import com.appmojo.sdk.events.AMActivityEvent;
 import com.appmojo.sdk.events.AMClickEvent;
 import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.events.AMImpressionEvent;
-import com.appmojo.sdk.repository.criterias.AMActivityCriteria;
+import com.appmojo.sdk.repository.AMCriteria;
 import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.utils.AMLog;
+import com.appmojo.sdk.utils.TimeUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.UUID;
 
 class AMActivityTracker {
 
     private Context mContext;
-    private AMSessionManager mSessionManager;
     private AMEventRepository mRepository;
-    private AMConfigurationManager mConfigurationManager;
 
     public AMActivityTracker(Context context) {
         mContext = context;
-    }
-
-
-    public void setSessionManager(AMSessionManager manager) {
-        mSessionManager = manager;
     }
 
 
@@ -41,16 +30,9 @@ class AMActivityTracker {
     }
 
 
-    public void setConfigurationManager(AMConfigurationManager configurationManager) {
-        mConfigurationManager = configurationManager;
-    }
-
-
     public synchronized void logActivity(@AMEvent.Type int type, String placementId, String adUnitId) {
-        Calendar calendar = getCalendar();
-        SimpleDateFormat dateFormat = getDateFormat();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        String date = dateFormat.format(calendar.getTime());
+        int hour = TimeUtils.getUTCCurrentHour();
+        String date = TimeUtils.getUTCCurrentDate();
 
         //quest last data
         AMEvent preEvent = getPreviousData(type, placementId, adUnitId, date, hour);
@@ -65,10 +47,10 @@ class AMActivityTracker {
             event = createActivityEventObject(type);
             if(event != null) {
                 event.setDeviceId(AMClientProvider.readUuid(mContext));
-                event.setExperimentId(mConfigurationManager.getExperimentId());
-                event.setVariantId(mConfigurationManager.getVariantId());
-                event.setRevisionNumber(mConfigurationManager.getRevisionId());
-                event.setSessionId(mSessionManager.getCurrentSessionId());
+                event.setExperimentId(AMConfigurationHelper.readExperimentId(mContext));
+                event.setVariantId(AMConfigurationHelper.readVariantId(mContext));
+                event.setRevisionNumber(AMConfigurationHelper.readRevisionNumber(mContext));
+                event.setSessionId(AMAppEngine.getInstance().getCurrentSessionId());
                 event.setPlacementId(placementId);
                 event.setAdUnitId(adUnitId);
                 event.setDate(date);
@@ -95,31 +77,16 @@ class AMActivityTracker {
     }
 
 
-    private Calendar getCalendar() {
-        long currentTime = System.currentTimeMillis();
-        TimeZone timeZone = TimeZone.getTimeZone("UTC");
-        Calendar calendar = Calendar.getInstance(timeZone);
-        calendar.setTime(new Date(currentTime));
-        return calendar;
-    }
-
-
-    private SimpleDateFormat getDateFormat() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return dateFormat;
-    }
-
-
     private AMEvent getPreviousData(@AMEvent.Type int type, String placementId,
                                 String adUnitId, String activeDate, int activeHour) {
         AMEvent event = null;
-        AMActivityCriteria criteria = new AMActivityCriteria(type);
+        AMCriteria criteria = new AMCriteria();
+        criteria.setActivityType(type);
         criteria.setDeviceId(AMClientProvider.readUuid(mContext));
         criteria.setSessionId(AMAppEngine.getInstance().getCurrentSessionId());
-        criteria.setExperimentId(mConfigurationManager.getExperimentId());
-        criteria.setVariantId(mConfigurationManager.getVariantId());
-        criteria.setRevisionId(mConfigurationManager.getRevisionId());
+        criteria.setExperimentId(AMConfigurationHelper.readExperimentId(mContext));
+        criteria.setVariantId(AMConfigurationHelper.readVariantId(mContext));
+        criteria.setRevisionId(AMConfigurationHelper.readRevisionNumber(mContext));
         criteria.setPlacementId(placementId);
         criteria.setAdUnitId(adUnitId);
         criteria.setDate(activeDate);

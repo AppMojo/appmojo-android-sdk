@@ -10,7 +10,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
-
 class AMAdMobBannerAdapter extends AMCustomBanner {
     private static final String TAG = "AppMojo";
 
@@ -98,24 +97,24 @@ class AMAdMobBannerAdapter extends AMCustomBanner {
         mAdMobListener = null;
     }
 
-    private AdSize parseAdSize(@AMAdSize.Size int adSize) {
+    private AdSize parseAdSize(AMAdSize adSize) {
         AdSize size;
-        if (adSize == AMAdSize.LARGE_BANNER) {
+        if (adSize == LARGE_BANNER) {
             size = AdSize.LARGE_BANNER;
 
-        } else if (adSize == AMAdSize.FULL_BANNER) {
+        } else if (adSize == FULL_BANNER) {
             size = AdSize.FULL_BANNER;
 
-        } else if (adSize == AMAdSize.LEADER_BOARD) {
+        } else if (adSize == LEADER_BOARD) {
             size = AdSize.LEADERBOARD;
 
-        } else if (adSize == AMAdSize.MEDIUM_RECTANGLE) {
+        } else if (adSize == MEDIUM_RECTANGLE) {
             size = AdSize.MEDIUM_RECTANGLE;
 
-        } else if (adSize == AMAdSize.WIDE_SKYSCRAPER) {
+        } else if (adSize == WIDE_SKYSCRAPER) {
             size = AdSize.WIDE_SKYSCRAPER;
 
-        } else if (adSize == AMAdSize.SMART_BANNER) {
+        } else if (adSize == SMART_BANNER) {
             size = AdSize.SMART_BANNER;
 
         } else {

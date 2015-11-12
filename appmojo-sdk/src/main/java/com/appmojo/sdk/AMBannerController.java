@@ -51,7 +51,7 @@ class AMBannerController extends AMController {
                 mCustomBanner = AMCustomBannerFactory.create(className);
             } catch (Exception e) {
                 mCustomAdRequest = null;
-                AMLog.w("AppMojo cannot find class %s. Make sure you add it to SDK module.", className, e);
+                AMLog.w("AppMojo", "AppMojo cannot find class %s, make sure you add it to SDK module.", className);
             }
         }
 
@@ -79,7 +79,7 @@ class AMBannerController extends AMController {
     @Override
     protected void applyAdRequest(AMCustomAdRequest adRequest) {
         AMLog.d("apply banner configuration...");
-        if(mCustomBanner != null && adRequest != null && adRequest instanceof AMBannerAdRequest) {
+        if(mCustomBanner != null && adRequest != null) {
             applyAutoHideView(false);
             if(mVisibility == View.VISIBLE) {
                 mCustomBanner.loadBanner(mContext, mCustomListener, (AMBannerAdRequest) adRequest);
@@ -164,11 +164,9 @@ class AMBannerController extends AMController {
 
 
     private AMBannerConfiguration getConfiguration() {
-        AMConfiguration config = mAppEngine.getConfiguration(mBannerView.getPlacementUid());
-        if(config != null && config instanceof AMBannerConfiguration) {
-            return (AMBannerConfiguration) config;
-        }
-        return null;
+        return (AMBannerConfiguration) mAppEngine.getConfiguration(
+                AMAdType.BANNER, mBannerView.getPlacementUid());
+
     }
 
 
@@ -220,6 +218,9 @@ class AMBannerController extends AMController {
             AMLog.i("Banner loaded...");
             setContentView(view);
 
+            //log session
+            AMAppEngine.getInstance().logSession();
+
             //log activity
             logActivity(AMEvent.IMPRESSION);
 
@@ -232,6 +233,9 @@ class AMBannerController extends AMController {
 
         @Override
         public void onCustomBannerFailed(int errCode) {
+            //log session
+            AMAppEngine.getInstance().logSession();
+
             if(mBannerView != null) {
                 AMLog.i("Banner failed to load on placement id: " + mBannerView.getPlacementUid());
             }
@@ -250,6 +254,10 @@ class AMBannerController extends AMController {
         @Override
         public void onCustomBannerOpened() {
             AMLog.i("Banner clicked...");
+
+            //log session
+            AMAppEngine.getInstance().logSession();
+
             //log activity
             logActivity(AMEvent.CLICK);
 

@@ -11,7 +11,7 @@ import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.utils.AMLog;
 
 
-public class AMAppEngine implements AMEventTriggerListener {
+class AMAppEngine implements AMEventTriggerListener {
 
     private enum ToKenStep {
         REQUEST_TOKEN, REFRESH_TOKEN
@@ -92,12 +92,18 @@ public class AMAppEngine implements AMEventTriggerListener {
         return mSessionManager.getCurrentSessionId();
     }
 
+    public boolean isSessionExpired() {
+        return mSessionManager.isSessionExpired(System.currentTimeMillis());
+    }
+
+    public void logSession() {
+        mSessionManager.logSession();
+    }
+
 
     private void prepareActivityTracker(Context context) {
         mActivityTracker = new AMActivityTracker(context);
         mActivityTracker.setEventRepository(mEventRepository);
-        mActivityTracker.setConfigurationManager(mConfigurationManager);
-        mActivityTracker.setSessionManager(mSessionManager);
     }
 
     private void prepareEventDelivery(Context context) {
@@ -127,11 +133,25 @@ public class AMAppEngine implements AMEventTriggerListener {
         mConfigurationManager.prepare();
     }
 
-    public AMConfiguration getConfiguration(String placementId) {
-        if (mConfigurationManager != null) {
-            return mConfigurationManager.getConfiguration(placementId);
+
+    public AMConfiguration getConfiguration(@AMAdType.Type int adType, String placementId) {
+        if (mConfigurationManager != null && mConfigurationManager.getConfiguration() != null) {
+            if(adType == AMAdType.INTERSTITIAL) {
+                return mConfigurationManager.getConfiguration()
+                        .getAllInterstitialConfig().get(placementId);
+            } else {
+                return mConfigurationManager.getConfiguration()
+                        .getAllBannerConfig().get(placementId);
+            }
         }
         return null;
+    }
+
+
+    public void saveConfiguration() {
+        if (mConfigurationManager != null && mConfigurationManager.getConfiguration() != null) {
+            mConfigurationManager.getConfiguration().save(mContext);
+        }
     }
 
 
@@ -176,26 +196,27 @@ public class AMAppEngine implements AMEventTriggerListener {
         });
     }
 
-    private void requestConfiguration() {
+    public void requestConfiguration() {
         final String uuid = AMClientProvider.readUuid(mContext);
         final AMConfigurationRequest request = new AMConfigurationRequest(mAppId, uuid);
         mConfigurationManager.requestConfiguration(request, new AMResponseListener<Boolean>() {
             @Override
             public void onSuccess(Boolean hasChanged) {
+                //log session
+                mSessionManager.logSession();
                 handleOnConfigurationSuccess(hasChanged);
             }
 
             @Override
             public void onFail(AMError error) {
+                //log session
+                mSessionManager.logSession();
                 handleOnConfigurationFailed(error);
             }
         });
     }
 
     private void handleOnConfigurationSuccess(boolean hasChanged) {
-        //log session
-        mSessionManager.logSession();
-
         AMLog.d("Get configuration success...");
         if (hasChanged) {
             AMLog.d("Notify on configuration change...");
@@ -225,15 +246,16 @@ public class AMAppEngine implements AMEventTriggerListener {
      * This method was will log the all activity to the database.
      */
     public void logActivity(@AMEvent.Type int type, String placementId, String adUnitId) {
+        //call log session to extend the session time
+        mSessionManager.logSession();
+
+        //if the experiment id is null or empty that mean it not start experiment yet. Needn't to log activity.
         String experimentId = AMConfigurationHelper.readExperimentId(mContext);
         if(experimentId == null || experimentId.length() < 1) {
             AMLog.w("No running experiment, activity will not be logged ...");
             return;
         }
-
-        mSessionManager.logSession();
         mActivityTracker.logActivity(type, placementId, adUnitId);
-
     }
 
 

@@ -19,7 +19,7 @@ class AMInterstitialAdRequest extends AMCustomAdRequest {
         }
     }
 
-    public int getSessionFrequency() {
+    public int getFrequencySession() {
         return sessionFrequency;
     }
 
@@ -27,7 +27,7 @@ class AMInterstitialAdRequest extends AMCustomAdRequest {
         this.sessionFrequency = sessionFrequency;
     }
 
-    public int getHourFrequency() {
+    public int getFrequencyHour() {
         return hourFrequency;
     }
 
@@ -35,11 +35,12 @@ class AMInterstitialAdRequest extends AMCustomAdRequest {
         this.hourFrequency = hourFrequency;
     }
 
-    public int getDayFrequency() {
+    public int getFrequencyDay() {
         return dayFrequency;
     }
 
     public void setDayFrequency(int dayFrequency) {
         this.dayFrequency = dayFrequency;
     }
+
 }

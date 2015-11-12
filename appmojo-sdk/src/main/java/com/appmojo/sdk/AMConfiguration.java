@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-class AMConfiguration implements AMJsonParser<AMConfiguration>{
+class AMConfiguration implements AMJsonParser<AMConfiguration> {
 
     protected static final String KEY_PLACEMENT_ID = "placement_id";
     protected static final String KEY_AD_NETWORK = "ad_network";
@@ -95,4 +95,15 @@ class AMConfiguration implements AMJsonParser<AMConfiguration>{
 
         return this;
     }
+
+    protected JSONObject toJsonObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_PLACEMENT_ID, this.getPlacementId());
+        jsonObject.put(KEY_AD_UNIT_ID, this.getAdUnitId());
+        jsonObject.put(KEY_AD_NETWORK, this.getAdNetwork());
+
+        return jsonObject;
+    }
+
+
 }

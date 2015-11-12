@@ -9,8 +9,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.appmojo.sdk.events.AMEvent;
-import com.appmojo.sdk.repository.criterias.AMActivityCriteria;
-import com.appmojo.sdk.repository.criterias.AMCriteria;
 import com.appmojo.sdk.utils.AMLog;
 
 import java.util.ArrayList;
@@ -44,6 +42,7 @@ abstract class AMDao {
     public void open() throws SQLException {
         mDb = mDbHelper.getWritableDatabase();
     }
+
 
     public void close() {
         if(mDbHelper != null) {
@@ -115,70 +114,96 @@ abstract class AMDao {
                 }
             }
 
+            if (criteria.getExperimentId() != null) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_EXPERIMENT_ID, criteria.getExperimentId());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_EXPERIMENT_ID, criteria.getExperimentId());
+                }
+            }
 
-            if (criteria instanceof AMActivityCriteria) {
-                String actWhere = getActivityWhereClause((AMActivityCriteria)criteria);
-                if(actWhere != null) {
-                    if (where == null) {
-                        where = actWhere;
-                    } else {
-                        where += String.format(Locale.getDefault(), " AND %s", actWhere);
-                    }
+            if (criteria.getVariantId() != null) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_VARIANT_ID, criteria.getVariantId());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_VARIANT_ID, criteria.getVariantId());
+                }
+            }
+
+            if (criteria.getRevisionId() != -1) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_REVISION_NUMBER, criteria.getRevisionId());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_NUMBER_FORMAT,
+                            AMSQLiteHelper.COLUMN_REVISION_NUMBER, criteria.getRevisionId());
+                }
+            }
+
+            if (criteria.getActivityType() != -1) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_NUMBER_FORMAT,
+                            AMSQLiteHelper.COLUMN_TYPE, criteria.getActivityType());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_NUMBER_FORMAT,
+                            AMSQLiteHelper.COLUMN_TYPE, criteria.getActivityType());
+                }
+            }
+
+            if (criteria.getPlacementId() != null) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_PLACEMENT_ID, criteria.getPlacementId());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_PLACEMENT_ID, criteria.getPlacementId());
+                }
+            }
+
+            if (criteria.getAdUnitId() != null) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_AD_UNIT_ID, criteria.getAdUnitId());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_AD_UNIT_ID, criteria.getAdUnitId());
+                }
+            }
+
+            if (criteria.getDate() != null) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_ACT_DATE, criteria.getDate());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_ACT_DATE, criteria.getDate());
+                }
+            }
+
+            if (criteria.getHour() != -1) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_NUMBER_FORMAT,
+                            AMSQLiteHelper.COLUMN_HOUR, criteria.getHour());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_NUMBER_FORMAT,
+                            AMSQLiteHelper.COLUMN_HOUR, criteria.getHour());
+                }
+            }
+
+            if (criteria.getTransactionId() != null) {
+                if(where == null) {
+                    where = String.format(Locale.getDefault(), CONDITION_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_TRANSACTION_ID, criteria.getTransactionId());
+                } else {
+                    where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
+                            AMSQLiteHelper.COLUMN_TRANSACTION_ID, criteria.getTransactionId());
                 }
             }
         }
         return where;
     }
-
-
-    private String getActivityWhereClause(AMActivityCriteria actCriteria) {
-        //Event type MUST have.
-        String where = String.format(Locale.getDefault(), CONDITION_NUMBER_FORMAT,
-                AMSQLiteHelper.COLUMN_TYPE, actCriteria.getActivityType());
-
-        if (actCriteria.getExperimentId() != null) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
-                    AMSQLiteHelper.COLUMN_EXPERIMENT_ID, actCriteria.getExperimentId());
-        }
-
-        if (actCriteria.getVariantId() != null) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
-                    AMSQLiteHelper.COLUMN_VARIANT_ID, actCriteria.getVariantId());
-        }
-
-        if (actCriteria.getRevisionId() != -1) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_NUMBER_FORMAT,
-                    AMSQLiteHelper.COLUMN_REVISION_NUMBER, actCriteria.getRevisionId());
-        }
-
-
-        if (actCriteria.getPlacementId() != null) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
-                    AMSQLiteHelper.COLUMN_PLACEMENT_ID, actCriteria.getPlacementId());
-        }
-
-        if (actCriteria.getAdUnitId() != null) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
-                    AMSQLiteHelper.COLUMN_AD_UNIT_ID, actCriteria.getAdUnitId());
-        }
-
-        if (actCriteria.getDate() != null) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
-                    AMSQLiteHelper.COLUMN_ACT_DATE, actCriteria.getDate());
-        }
-
-        if (actCriteria.getHour() != -1) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_NUMBER_FORMAT,
-                    AMSQLiteHelper.COLUMN_HOUR, actCriteria.getHour());
-        }
-
-
-        if (actCriteria.getTransactionId() != null) {
-            where += String.format(Locale.getDefault(), CONDITION_AND_TEXT_FORMAT,
-                    AMSQLiteHelper.COLUMN_TRANSACTION_ID, actCriteria.getTransactionId());
-        }
-
-        return where;
-    }
-
 }

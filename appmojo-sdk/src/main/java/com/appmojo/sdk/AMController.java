@@ -65,7 +65,6 @@ abstract class AMController {
     }
 
     protected void logActivity(@AMEvent.Type int type) {
-        AMLog.d("log activity...");
         if(mAMView != null && mCustomAdRequest != null) {
             AMAppEngine.getInstance().logActivity(
                     type, mAMView.getPlacementUid(), mCustomAdRequest.getAdUnitId());

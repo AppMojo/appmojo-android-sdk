@@ -1,12 +1,13 @@
 package com.appmojo.sdk;
 
+import android.content.Context;
+
 import com.appmojo.sdk.utils.AMLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,12 +23,12 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
     private String mExperimentId;
     private int mRevisionNumber;
     private String mVariantId;
-    private ArrayList<AMBannerConfiguration> mBanners;
-    private ArrayList<AMInterstitialConfiguration> mInterstitials;
+    private Map<String, AMBannerConfiguration> mBanners;
+    private Map<String, AMInterstitialConfiguration> mInterstitials;
 
     AMConfigurationResponse() {
-        mBanners = new ArrayList<>();
-        mInterstitials = new ArrayList<>();
+        mBanners  = new HashMap<>();
+        mInterstitials  = new HashMap<>();
     }
 
     public String getExperimentId() {
@@ -46,14 +47,17 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
 
     public Map<String, AMConfiguration> getAllConfiguration() {
         Map<String, AMConfiguration> configMap = new HashMap<>();
-        for(AMConfiguration item : mBanners) {
-            configMap.put(item.getPlacementId(), item);
-        }
-
-        for(AMConfiguration item : mInterstitials) {
-            configMap.put(item.getPlacementId(), item);
-        }
+        configMap.putAll(mBanners);
+        configMap.putAll(mInterstitials);
         return configMap;
+    }
+
+    public Map<String, AMInterstitialConfiguration> getAllInterstitialConfig() {
+        return mInterstitials;
+    }
+
+    public Map<String, AMBannerConfiguration> getAllBannerConfig() {
+        return mBanners;
     }
 
     @Override
@@ -106,7 +110,6 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
 
 
     private void parseBanner(JSONObject jsonObject) {
-
         try {
             //parsing banner configuration
             if (jsonObject.has(KEY_BANNERS)) {
@@ -117,7 +120,7 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
                     objBanner = bannerObjArray.getJSONObject(i);
                     bannerConfig = new AMBannerConfiguration().parse(objBanner);
                     if (bannerConfig != null && bannerConfig.getPlacementId() != null) {
-                        mBanners.add(bannerConfig);
+                        mBanners.put(bannerConfig.getPlacementId(), bannerConfig);
                     }
                 }
             }
@@ -138,13 +141,46 @@ class AMConfigurationResponse implements AMJsonParser<AMConfigurationResponse> {
                     objInter = interObjArray.getJSONObject(i);
                     interConfig = new AMInterstitialConfiguration().parse(objInter);
                     if (interConfig != null && interConfig.getPlacementId() != null) {
-                        mInterstitials.add(interConfig);
+                        mInterstitials.put(interConfig.getPlacementId(), interConfig);
                     }
                 }
             }
         } catch (JSONException e) {
             AMLog.e("JSON Interstitial paring exception.", e);
-
         }
+    }
+
+    public void save(Context context) {
+        try {
+            AMConfigurationHelper.writeConfiguration(context, this.toJsonObject().toString());
+        } catch (JSONException e) {
+            AMLog.e("Save configuration failed", e);
+        }
+    }
+
+    public JSONObject toJsonObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(KEY_EXPERIMENT_ID, this.getExperimentId());
+        jsonObject.put(KEY_REVISION_NUMBER, this.getRevisionNumber());
+        jsonObject.put(KEY_VARIANT_ID, this.getVariantId());
+
+        JSONArray bannerArr = new JSONArray();
+        JSONObject bnnObj;
+        for (Map.Entry<String, AMBannerConfiguration> entry : mBanners.entrySet()) {
+            bnnObj = entry.getValue().toJsonObject();
+            bannerArr.put(bnnObj);
+        }
+
+        JSONArray interArr = new JSONArray();
+        JSONObject interObj;
+        for (Map.Entry<String, AMInterstitialConfiguration> entry : mInterstitials.entrySet()) {
+            interObj = entry.getValue().toJsonObject();
+            interArr.put(interObj);
+        }
+
+        jsonObject.put(KEY_BANNERS, bannerArr);
+        jsonObject.put(KEY_INTERSTITIALS, interArr);
+
+        return jsonObject;
     }
 }

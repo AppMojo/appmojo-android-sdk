@@ -4,7 +4,6 @@ package com.appmojo.sdk.repository;
 import android.content.Context;
 
 import com.appmojo.sdk.events.AMEvent;
-import com.appmojo.sdk.repository.criterias.AMCriteria;
 import com.appmojo.sdk.utils.AMLog;
 
 import java.util.List;

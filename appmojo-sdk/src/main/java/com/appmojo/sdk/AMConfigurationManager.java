@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,20 +21,19 @@ class AMConfigurationManager {
     private static final int MAX_RETRY_COUNT = 1;
 
     private Context mContext;
-    private Map<String, AMConfiguration> mConfigMap;
+    private AMConfigurationResponse mConfigResponse;
     private AMConfigurationRequest mRequest;
     private int retryCount = 0;
     private AMConnectionHelper mConnectionHelper;
 
     public AMConfigurationManager(Context context) {
         mContext = context;
-        mConfigMap = new HashMap<>();
     }
 
 
     public void prepare() {
         retryCount = 0;
-        mConfigMap = AMConfigurationHelper.readConfiguration(mContext);
+        mConfigResponse = AMConfigurationHelper.readConfiguration(mContext);
     }
 
     public String getExperimentId() {
@@ -48,25 +46,8 @@ class AMConfigurationManager {
     }
 
 
-    public int getRevisionId() {
-        return AMConfigurationHelper.readRevisionNumber(mContext);
-    }
-
-
-    public synchronized AMConfiguration getConfiguration(String placementId) {
-        AMConfiguration configuration = null;
-        if(mConfigMap != null) {
-            try {
-                configuration = mConfigMap.get(placementId);
-            } catch (IndexOutOfBoundsException idxEx) {
-                AMLog.e("Get configuration failed, IndexOutOfBoundsException.", idxEx);
-            } catch (ConcurrentModificationException conEx) {
-                AMLog.e("Get configuration failed, ConcurrentModificationException.", conEx);
-            } catch (NullPointerException nullEx) {
-                AMLog.e("Get configuration failed, NullPointerException.", nullEx);
-            }
-        }
-        return configuration;
+    public synchronized AMConfigurationResponse getConfiguration() {
+        return mConfigResponse;
     }
 
 
@@ -125,19 +106,15 @@ class AMConfigurationManager {
             AMConfigurationResponse configResponse = new AMConfigurationResponse();
             configResponse = configResponse.parse(response.getResponse());
 
-            if (configResponse != null && configResponse.getAllConfiguration().size() > 0) {
-                String saveVariantId = AMConfigurationHelper.readVariantId(mContext);
-                int saveRevisionNumber = AMConfigurationHelper.readRevisionNumber(mContext);
+            if (configResponse != null) {
+                String saveVariantId = mConfigResponse == null ? null : mConfigResponse.getVariantId();
+                int saveRevisionNumber = mConfigResponse == null ? -1 : mConfigResponse.getRevisionNumber();
                 String variantId = configResponse.getVariantId();
                 int revisionNumber = configResponse.getRevisionNumber();
-
                 if (saveVariantId == null || !saveVariantId.equals(variantId)
                         || saveRevisionNumber == -1 || saveRevisionNumber != revisionNumber) {
                     AMLog.d("Configuration's revision not match, update config....");
-                    mConfigMap = configResponse.getAllConfiguration();
-                    AMConfigurationHelper.writeExperimentId(mContext, configResponse.getExperimentId());
-                    AMConfigurationHelper.writeRevisionNumber(mContext, revisionNumber);
-                    AMConfigurationHelper.writeVariantId(mContext, variantId);
+                    mConfigResponse = configResponse;
                     AMConfigurationHelper.writeConfiguration(mContext, response.getResponse());
 
                     //notify to caller
@@ -228,20 +205,35 @@ class AMConfigurationManager {
 
 
     public void onDestroy() {
-        mContext = null;
-        if(mConfigMap != null) {
-            mConfigMap.clear();
+        if(mConfigResponse != null) {
+            try {
+                AMConfigurationHelper.writeConfiguration(
+                        mContext, mConfigResponse.toJsonObject().toString());
+            } catch (JSONException e) {
+                AMLog.w("Cannot save configuration while object is being destroyed...");
+            }
         }
         if(mConnectionHelper != null) {
             mConnectionHelper.shutdownAllTask();
             mConnectionHelper = null;
         }
+
+        mContext = null;
     }
 
 
     /************************** FOR TEST *****************************/
-    public void setTestData(Map<String, AMConfiguration> configs) {
-        mConfigMap = configs;
+    public void setTestData(AMConfigurationResponse configs) {
+        mConfigResponse = configs;
+    }
+
+    public void addTestData(AMConfiguration config) {
+        if(config instanceof AMInterstitialConfiguration)
+            mConfigResponse.getAllInterstitialConfig().put(config.getPlacementId(), (AMInterstitialConfiguration)config);
+
+        if(config instanceof AMBannerConfiguration)
+            mConfigResponse.getAllBannerConfig().put(config.getPlacementId(), (AMBannerConfiguration) config);
+
     }
 
 }

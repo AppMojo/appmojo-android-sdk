@@ -16,4 +16,9 @@ public class AppMojo {
         AMAppEngine.getInstance().start(context, appId, appSecret);
     }
 
+    public static void addConfiguration(AMConfiguration configuration) {
+        AMAppEngine.getInstance().getConfigurationManager().addTestData(configuration);
+
+    }
+
 }

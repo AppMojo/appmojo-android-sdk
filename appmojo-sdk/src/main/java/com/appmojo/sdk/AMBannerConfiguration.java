@@ -48,4 +48,11 @@ class AMBannerConfiguration extends AMConfiguration {
 
         return this;
     }
+
+
+    public JSONObject toJsonObject() throws JSONException {
+        JSONObject jsonObject =  super.toJsonObject();
+        jsonObject.put(KEY_REFRESH_RATE, this.getRefreshRate());
+        return jsonObject;
+    }
 }

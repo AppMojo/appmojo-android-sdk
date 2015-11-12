@@ -45,11 +45,11 @@ class AMSessionManager {
 
 
     public String getCurrentSessionId() {
-        if(getCurrentSession() != null) {
-            return getCurrentSession().getSessionId();
-        } else {
-            return null;
+        if(getCurrentSession() == null || isSessionExpired(System.currentTimeMillis())) {
+            logSession();
         }
+
+        return getCurrentSession().getSessionId();
     }
 
 
@@ -57,48 +57,48 @@ class AMSessionManager {
         return mSession;
     }
 
+    public boolean isSessionExpired(long curTime) {
+        if(mSession == null) {
+            return true;
+        }
+
+        if (mSession.getEndTime() < curTime) { //session expired
+            AMLog.w("session has expired.");
+            return true;
+        } else {
+            if (mSession.getStartTime() > curTime) { //user change time to the pass
+                AMLog.w("session time invalid.");
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public synchronized void logSession() {
-        String experimentId = AMConfigurationHelper.readExperimentId(mContext);
-        if(experimentId != null && experimentId.length() > 0) {
-
-            long curTime = System.currentTimeMillis();
+        long curTime = System.currentTimeMillis();
+        if (mSession == null) {
+            mSession = getLastSession();
             if (mSession == null) {
-                mSession = getLastSession();
-                if (mSession == null) {
-                    mSession = createSession(curTime);
-                }
-            }
-
-            boolean isTriggerDelivery = false;
-            //verify session not expired
-            if (mSession.getEndTime() < curTime) { //session expired
-                AMLog.w("session has expired.");
                 mSession = createSession(curTime);
-                isTriggerDelivery = true;
-            } else {
-                if (mSession.getStartTime() > curTime) { //user change time to the pass
-                    AMLog.w("session time invalid.");
-                    mSession = createSession(curTime);
-                    isTriggerDelivery = true;
-                }
             }
+        }
 
-            //update session time
-            mSession.setEndTime(curTime + getSessionLifeTime());
-            mSession.setDuration(curTime - mSession.getStartTime());
+        boolean isTriggerDelivery = false;
+        //verify session not expired
+        if (isSessionExpired(curTime)) { //session expired
+            mSession = createSession(curTime);
+            isTriggerDelivery = true;
+        }
 
-            //save session
-            saveSession(mSession);
-            if (isTriggerDelivery && mEventTriggerListener != null) {
-                mEventTriggerListener.onTriggerDelivery();
-            }
+        //update session time
+        mSession.setEndTime(curTime + getSessionLifeTime());
+        mSession.setDuration(curTime - mSession.getStartTime());
 
-        } else {
-            AMLog.w("No running experiment, session will not be logged...");
-            if (mEventTriggerListener != null) {
-                mEventTriggerListener.onTriggerDelivery();
-            }
+        //save session
+        saveSession(mSession);
+        if (isTriggerDelivery && mEventTriggerListener != null) {
+            mEventTriggerListener.onTriggerDelivery();
         }
     }
 

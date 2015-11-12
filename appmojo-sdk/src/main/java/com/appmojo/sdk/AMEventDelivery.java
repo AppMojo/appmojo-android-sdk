@@ -9,8 +9,7 @@ import com.appmojo.sdk.events.AMActivityEvent;
 import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.events.AMSessionEvent;
 import com.appmojo.sdk.repository.AMEventRepository;
-import com.appmojo.sdk.repository.criterias.AMActivityCriteria;
-import com.appmojo.sdk.repository.criterias.AMCriteria;
+import com.appmojo.sdk.repository.AMCriteria;
 import com.appmojo.sdk.utils.AMLog;
 
 import org.json.JSONArray;
@@ -83,19 +82,30 @@ class AMEventDelivery {
 
     private void deliverSessionEvent() {
         List<AMEvent> events = mEventRepository.get(AMEvent.SESSION);
+
         if(events != null && !events.isEmpty()) {
             AMSessionEvent ssEvent;
             long currentTime = System.currentTimeMillis();
-
             for(int i = events.size()-1 ; i >=0 ; i--) {
                 ssEvent = (AMSessionEvent) events.get(i);
                 if(ssEvent.getStartTime() <= currentTime && ssEvent.getEndTime() >= currentTime) { //[start, end]
                     events.remove(i); //remove active session
+                } else {
+                    if(ssEvent.getExperimentId() == null || ssEvent.getExperimentId().length() < 1) { //empty experiment ID
+                        events.remove(i); //remove from delivery chuck
+                        mEventRepository.delete(AMEvent.SESSION, ssEvent.getId()); //delete from data base
+                        AMLog.e("delete session id : " + ssEvent.getId());
+                    }
                 }
             }
 
             String body = createSessionBody(events);
-            sendEvent(AMEvent.SESSION, AMBaseConfiguration.getUrlSession(mAppId), body);
+            if(body != null) {
+                sendEvent(AMEvent.SESSION, AMBaseConfiguration.getUrlSession(mAppId), body);
+            } else {
+                deliverNextEvent();
+            }
+
         } else {
             deliverNextEvent();
         }
@@ -160,8 +170,9 @@ class AMEventDelivery {
                 }
 
                 if(type == AMEvent.IMPRESSION || type == AMEvent.CLICK) {
-                    criteria = new AMActivityCriteria(type);
-                    ((AMActivityCriteria)criteria).setTransactionId(value);
+                    criteria = new AMCriteria();
+                    criteria.setActivityType(type);
+                    criteria.setTransactionId(value);
                 }
 
                 if(criteria != null) {
@@ -199,8 +210,10 @@ class AMEventDelivery {
 
 
     private String createSessionBody(List<AMEvent> events) {
-        JSONArray jsonArray = new JSONArray();
-        if(events != null) {
+        String body = null;
+        if(events != null && !events.isEmpty()) {
+            JSONArray jsonArray = new JSONArray();
+
             JSONObject jObj;
             AMSessionEvent ssEvent;
             for (AMEvent event : events) {
@@ -210,8 +223,9 @@ class AMEventDelivery {
                     jsonArray.put(jObj);
                 }
             }
+            body = jsonArray.toString();
         }
-        return jsonArray.toString();
+        return body;
      }
 
 

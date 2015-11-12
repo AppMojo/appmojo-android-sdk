@@ -7,7 +7,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-
 class AMAdMobInterstitialAdapter extends AMCustomInterstitial {
     private static final String TAG = "AppMojo";
 
@@ -99,7 +98,7 @@ class AMAdMobInterstitialAdapter extends AMCustomInterstitial {
     }
 
     //   _____ __  __ __  __             ____ _
-    //  |_   _|  \ | |  | | | ___  __ __/ ___| | ____ 	 ___  ___
+    //  |_   _|  \ | |  | | | ___  __ __/ ___| | ____    ___  ___
     //    | | | \| | | \| | |/ _ \| |/ | |   | |/ _  \  / __|/ __|
     //   _| |_| |\ | | |\ | |  __/|   /| |___| | (_)  \ \__ \\__ \
     //  |_____|_| \__|_| \__|\___||__|  \____|_|\___/|_\|___/|___/
@@ -137,6 +136,14 @@ class AMAdMobInterstitialAdapter extends AMCustomInterstitial {
             Log.d(TAG, "Google Play Services interstitial ad shown.");
             if (mListener != null) {
                 mListener.onCustomInterstitialShown();
+            }
+        }
+
+        @Override
+        public void onAdLeftApplication() {
+            Log.d(TAG, "Google Play Services interstitial ad left application.");
+            if (mListener != null) {
+                mListener.onCustomInterstitialLeftApplication();
             }
         }
     }
