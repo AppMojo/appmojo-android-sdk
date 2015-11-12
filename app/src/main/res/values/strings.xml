@@ -2,17 +2,28 @@
     <string name="app_name">AppmojoAndroidSDK</string>
     <string name="label_no_data">No data</string>
 
+    <string name="label_reload">Reload</string>
+    <string name="label_show_ad">Show Ad</string>
+    <string name="label_next_page">Next Page</string>
+
 
     <!--Ads-->
     <string name="app_id" tools:ignore="TypographyDashes">YOUR-APP-ID</string>
     <string name="app_secret" tools:ignore="TypographyDashes">YOUR-APP-SECRET</string>
 
-    <!--ads placement id-->
-    <string name="ad_placement_id_one" tools:ignore="TypographyDashes">YOUR-PLACEMENT_ID</string>
-    <string name="ad_placement_id_two" tools:ignore="TypographyDashes">YOUR-PLACEMENT_ID</string>
+    <!-- Banner ads placement id-->
+    <string name="banner_placement_id_one" tools:ignore="TypographyDashes">YOUR-PLACEMENT-ID</string>
+    <string name="banner_placement_id_two" tools:ignore="TypographyDashes">YOUR-PLACEMENT-ID</string>
+
+    <!-- Interstitial ads placement id-->
+    <string name="interstitial_placement_id">YOUR-INTERSTITIAL-PLACEMENT-ID</string>
 
     <!--test device id-->
     <string name="device_id">YOUR-TEST-DEVICE-ID</string>
+    <array name="devices_uuid">
+        <item>YOUR-TEST-DEVICE-ID</item>
+        <item>YOUR-TEST-DEVICE-ID</item>
+    </array>
 
 
 </resources>

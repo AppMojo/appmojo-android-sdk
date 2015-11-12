@@ -20,7 +20,6 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.sample.appmojo.R.layout.activity_main);
 
-        AppMojo.setDebugMode(true);
         AppMojo.start(
                 getApplicationContext(),
                 getString(com.sample.appmojo.R.string.app_id),
@@ -28,6 +27,7 @@ public class MainActivity extends ListActivity {
 
         List<String> listValues = new ArrayList<>();
         listValues.add(AMBannerActivity.class.getSimpleName());
+        listValues.add(AMInterstitialActivity.class.getSimpleName());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 com.sample.appmojo.R.layout.list_item, com.sample.appmojo.R.id.list_item, listValues);
@@ -40,10 +40,14 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Intent intent = null;
+        Intent intent;
         switch (position) {
             case 0:
                 intent = new Intent(getApplicationContext(), AMBannerActivity.class);
+                startActivity(intent);
+                break;
+            case 1:
+                intent = new Intent(getApplicationContext(), AMInterstitialActivity.class);
                 startActivity(intent);
                 break;
             default:

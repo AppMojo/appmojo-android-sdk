@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         appMojo:AMAdSize="BANNER"
-        appMojo:AMPlacementId="@string/ad_placement_id_one"/>
+        appMojo:AMPlacementId="@string/banner_placement_id_one"/>
 
     <RelativeLayout
         android:id="@+id/ads_layout"

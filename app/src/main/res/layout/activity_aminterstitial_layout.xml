@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center">
+
+        <Button
+            android:id="@+id/interAd_refresh_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_reload"
+            android:onClick="onClickBtn"
+            />
+
+        <Button
+            android:id="@+id/interAd_show_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/label_show_ad"
+            android:onClick="onClickBtn"
+            />
+
+        <Button
+            android:id="@+id/interAd_next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/label_next_page"
+            android:onClick="onClickBtn"
+            />
+
+</LinearLayout>

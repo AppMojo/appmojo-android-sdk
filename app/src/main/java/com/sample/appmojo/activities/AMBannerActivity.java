@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import com.appmojo.sdk.AMAdRequest;
 import com.appmojo.sdk.AMBannerView;
 import com.appmojo.sdk.base.AMAdSize;
+import com.sample.appmojo.R;
 
 
 public class AMBannerActivity extends Activity {
@@ -20,8 +21,11 @@ public class AMBannerActivity extends Activity {
         setContentView(com.sample.appmojo.R.layout.activity_ambanner_layout);
 
         //setup ad request
+        String[] deviceIds = getResources().getStringArray(R.array.devices_uuid);
         AMAdRequest.Builder builder = new AMAdRequest.Builder();
-        builder.addTestDevice(getString(com.sample.appmojo.R.string.device_id));
+        for(String uuid : deviceIds) {
+            builder.addTestDevice(uuid);
+        }
         AMAdRequest adRequest = builder.build();
 
         //read view from xml
@@ -32,7 +36,7 @@ public class AMBannerActivity extends Activity {
         mAdsLayout = (RelativeLayout) findViewById(com.sample.appmojo.R.id.ads_layout);
         mBannerView = new AMBannerView(getApplicationContext());
         mBannerView.setAdSize(AMAdSize.BANNER);
-        mBannerView.setPlacementUid(getString(com.sample.appmojo.R.string.ad_placement_id_two));
+        mBannerView.setPlacementUid(getString(com.sample.appmojo.R.string.banner_placement_id_two));
         mBannerView.loadAd(adRequest);
 
         //add banner view to parent
