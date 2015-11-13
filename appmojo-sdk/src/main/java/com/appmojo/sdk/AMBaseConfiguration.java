@@ -6,7 +6,7 @@ public class AMBaseConfiguration {
     static final String ACTION_CONFIGURATION_CHANGE = "com.appmojo.sdk.configuration_change";
 
     private static final String APPMOJO_URL_DEV = "http://dev.appmojo.com/api/v1";
-//    private static final String APPMOJO_URL_STAGING = "http://staging.appmojo.com/api/v1";
+    private static final String APPMOJO_URL_STAGING = "http://staging.appmojo.com/api/v1";
     private static final String APPMOJO_URL_PRODUCTION = "https://appmojo.com/api/v1";
     private static final String SUB_URL_AUTHEN = "/auth";
     private static final String SUB_URL_APPS = "/apps";
@@ -19,14 +19,16 @@ public class AMBaseConfiguration {
 
     public static String getUrlAuthen(){
         StringBuilder builder = new StringBuilder();
-        builder.append(AMAppEngine.getInstance().isDebugMode() ? APPMOJO_URL_DEV : APPMOJO_URL_PRODUCTION);
+        String testingServer = AMAppEngine.getInstance().isUsingDevServer() ? APPMOJO_URL_DEV : APPMOJO_URL_STAGING;
+        builder.append(AMAppEngine.getInstance().isDebugMode() ? testingServer : APPMOJO_URL_PRODUCTION);
         builder.append(SUB_URL_AUTHEN);
         return builder.toString();
     }
 
     public static String getUrlConfiguration(String appId){
         StringBuilder builder = new StringBuilder();
-        builder.append(AMAppEngine.getInstance().isDebugMode() ? APPMOJO_URL_DEV : APPMOJO_URL_PRODUCTION);
+        String testingServer = AMAppEngine.getInstance().isUsingDevServer() ? APPMOJO_URL_DEV : APPMOJO_URL_STAGING;
+        builder.append(AMAppEngine.getInstance().isDebugMode() ? testingServer : APPMOJO_URL_PRODUCTION);
         builder.append(SUB_URL_APPS);
         builder.append("/");
         builder.append(appId);
@@ -36,7 +38,8 @@ public class AMBaseConfiguration {
 
     public static String getUrlSession(String appId){
         StringBuilder builder = new StringBuilder();
-        builder.append(AMAppEngine.getInstance().isDebugMode() ? APPMOJO_URL_DEV : APPMOJO_URL_PRODUCTION);
+        String testingServer = AMAppEngine.getInstance().isUsingDevServer() ? APPMOJO_URL_DEV : APPMOJO_URL_STAGING;
+        builder.append(AMAppEngine.getInstance().isDebugMode() ? testingServer : APPMOJO_URL_PRODUCTION);
         builder.append(SUB_URL_APPS);
         builder.append("/");
         builder.append(appId);
@@ -46,7 +49,8 @@ public class AMBaseConfiguration {
 
     public static String getUrlActivities(String appId){
         StringBuilder builder = new StringBuilder();
-        builder.append(AMAppEngine.getInstance().isDebugMode() ? APPMOJO_URL_DEV : APPMOJO_URL_PRODUCTION);
+        String testingServer = AMAppEngine.getInstance().isUsingDevServer() ? APPMOJO_URL_DEV : APPMOJO_URL_STAGING;
+        builder.append(AMAppEngine.getInstance().isDebugMode() ? testingServer : APPMOJO_URL_PRODUCTION);
         builder.append(SUB_URL_APPS);
         builder.append("/");
         builder.append(appId);

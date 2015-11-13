@@ -19,7 +19,6 @@
     <string name="interstitial_placement_id">YOUR-INTERSTITIAL-PLACEMENT-ID</string>
 
     <!--test device id-->
-    <string name="device_id">YOUR-TEST-DEVICE-ID</string>
     <array name="devices_uuid">
         <item>YOUR-TEST-DEVICE-ID</item>
         <item>YOUR-TEST-DEVICE-ID</item>

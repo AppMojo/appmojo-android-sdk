@@ -12,7 +12,7 @@ ext {
     siteUrl = 'https://github.com/AppMojo/appmojo-android-sdk'
     gitUrl = 'https://github.com/AppMojo/appmojo-android-sdk.git'
 
-    libraryVersion = '0.0.14'
+    libraryVersion = '0.0.15'
 
     developerId = 'nutron-appsynth'
     developerName = 'Watcharin Sripongpunkul'
@@ -32,8 +32,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 14
-        versionName "0.0.14"
+        versionCode 15
+        versionName "0.0.15"
     }
     buildTypes {
         release {

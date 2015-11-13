@@ -17,12 +17,15 @@ class AMAppEngine implements AMEventTriggerListener {
         REQUEST_TOKEN, REFRESH_TOKEN
     }
 
+    //TODO: for test
+    private boolean isDebugMode;
+    private boolean isUsingDevServer;
+
     private static AMAppEngine sInstance;
     private String mAppId;
     private String mAppSecret;
     private AMConfigurationManager mConfigurationManager;
     private Context mContext;
-    private boolean isDebugMode;
     private AMAuthenticationManager mAuthenManager;
     private AMSessionManager mSessionManager;
     private AMEventDelivery mEventDelivery;
@@ -46,6 +49,15 @@ class AMAppEngine implements AMEventTriggerListener {
 
     public boolean isDebugMode() {
         return isDebugMode;
+    }
+
+    public void setUsingDevServer(boolean isDevServer) {
+        isUsingDevServer = isDevServer;
+    }
+
+
+    public boolean isUsingDevServer() {
+        return isUsingDevServer;
     }
 
 
