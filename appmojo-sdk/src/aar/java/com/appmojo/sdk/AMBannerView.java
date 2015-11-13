@@ -25,6 +25,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private int mAdSize = AMAdSize.BANNER;
     private Context mContext;
     private boolean mShouldAutoHide;
+    private int mUserSelectedVisibility = VISIBLE;
 
     public AMBannerView(Context context) {
         super(context);
@@ -59,6 +60,10 @@ public class AMBannerView extends ViewGroup implements AMView {
     @AMAdSize.Size
     public int getAdSize() {
         return this.mAdSize;
+    }
+
+    public int getUserSelectedVisibility() {
+        return mUserSelectedVisibility;
     }
 
     public int getRefreshRate() {
@@ -111,6 +116,12 @@ public class AMBannerView extends ViewGroup implements AMView {
     @Override
     public void loadAd(AMAdRequest adRequest) {
         mAMController.loadAd(adRequest);
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        mUserSelectedVisibility = visibility;
+        super.setVisibility(visibility);
     }
 
     @Override

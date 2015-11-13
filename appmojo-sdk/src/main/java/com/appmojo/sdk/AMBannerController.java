@@ -106,12 +106,13 @@ class AMBannerController extends AMController {
     }
 
 
+    @SuppressWarnings("ResourceType")
     private void applyAutoHideView(boolean isHide) {
         if(mBannerView != null && mBannerView.isAutoHideView()) {
             if(isHide) {
                 mBannerView.setVisibility(View.GONE);
             } else {
-                mBannerView.setVisibility(View.VISIBLE);
+                mBannerView.setVisibility(mBannerView.getUserSelectedVisibility());
             }
         }
     }
@@ -222,7 +223,11 @@ class AMBannerController extends AMController {
             AMAppEngine.getInstance().logSession();
 
             //log activity
-            logActivity(AMEvent.IMPRESSION);
+            if(mAMView != null && ((AMBannerView)mAMView).getVisibility() == View.VISIBLE) {
+                AMLog.i("Banner log IMPRESSION activity...");
+                logActivity(AMEvent.IMPRESSION);
+            }
+
 
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdLoaded(mBannerView);
