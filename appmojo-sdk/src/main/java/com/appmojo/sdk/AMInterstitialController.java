@@ -7,7 +7,7 @@ import com.appmojo.sdk.utils.AMLog;
 import com.appmojo.sdk.utils.TimeUtils;
 
 
-class AMInterstitialController  extends AMController {
+class AMInterstitialController extends AMController {
     //no prefix private because it easy to test
     AMCustomInterstitialListener mCustomListener;
     private AMCustomInterstitial mCustomInterstitial;
@@ -42,7 +42,7 @@ class AMInterstitialController  extends AMController {
 
     @Override
     public void loadAd(AMAdRequest adRequest) {
-        AMLog.d("load interstitial ad...");
+        AMLog.d("AppMojo", "[PlcID: %s] load interstitial ad...", mAMInterstitial.getPlacementUid());
         //sometime user call multiple time
         String className = null;
 
@@ -73,23 +73,23 @@ class AMInterstitialController  extends AMController {
         if(mCustomAdRequest != null) {
             applyAdRequest(mCustomAdRequest);
         } else {
-            AMLog.w("AppMojo", "No configuration could be applied for placement id: %s. Did you call loadAd()?", mAMView.getPlacementUid());
+            AMLog.w("AppMojo", "[PlcID: %s] No configuration could be applied. Did you call loadAd()?", mAMView.getPlacementUid());
         }
     }
 
     @Override
     protected void applyAdRequest(AMCustomAdRequest adRequest) {
-        AMLog.d("Apply interstitial configuration...");
+        AMLog.d("AppMojo", "[PlcID: %s] Apply interstitial configuration...", mAMView.getPlacementUid());
         if(mCustomInterstitial != null && adRequest != null) {
             if(isAllowToShow()) {
                 mCustomInterstitial.invalidate();
                 mCustomInterstitial.loadInterstitial(mContext, mCustomListener, (AMInterstitialAdRequest) adRequest);
                 saveConfiguration();
             } else {
-                AMLog.d("Interstitial ad not allow to load.");
+                AMLog.d("AppMojo", "[PlcID: %s] Interstitial ad not allow to load.", mAMView.getPlacementUid());
             }
         } else {
-            AMLog.w("No configuration could be applied for placement id: " + mAMView.getPlacementUid());
+            AMLog.w("AppMojo", "[PlcID: %s] No configuration could be applied. ", mAMView.getPlacementUid());
             notifyNotApplyConfiguration();
         }
     }
@@ -98,22 +98,22 @@ class AMInterstitialController  extends AMController {
         if(mCustomInterstitial != null) {
             return mCustomInterstitial.isLoaded();
         } else {
-            AMLog.d("Interstitial ad not load yet.");
+            AMLog.d("AppMojo", "[PlcID: %s] Interstitial ad not load yet.", mAMView.getPlacementUid());
         }
         return false;
     }
 
     public void show() {
-        AMLog.d("show interstitial ad...");
         if(mCustomInterstitial != null && mCustomInterstitial.isLoaded()) {
             if(isAllowToShow()) {
+                AMLog.d("AppMojo", "[PlcID: %s] show interstitial ad...", mAMView.getPlacementUid());
                 mCustomInterstitial.show();
                 increaseFrequencyCapAndSave();
             } else {
-                AMLog.d("Interstitial ad not allow to show.");
+                AMLog.d("AppMojo", "[PlcID: %s] Interstitial ad not allow to show.", mAMView.getPlacementUid());
             }
         } else {
-            AMLog.d("Tried to show a interstitial ad before it finished loading. Please try again.");
+            AMLog.d("AppMojo", "[PlcID: %s] Tried to show a interstitial ad before it finished loading. Please try again.", mAMView.getPlacementUid());
         }
     }
 
@@ -137,7 +137,7 @@ class AMInterstitialController  extends AMController {
     private boolean isAllowToShow() {
         AMInterstitialConfiguration config = getConfiguration();
         if(mCustomAdRequest == null || config == null) {
-            AMLog.w("No configuration could be applied for placement id: " + mAMView.getPlacementUid());
+            AMLog.w("AppMojo", "[PlcID: %s] No configuration could be applied for placement id: ", mAMView.getPlacementUid());
             return false;
         }
 
@@ -171,7 +171,7 @@ class AMInterstitialController  extends AMController {
                 return isAllowToShowInTermOfHour(config);
             }
         } else { //same date but reach day limit
-            AMLog.w("Reach day frequency limit.");
+            AMLog.w("AppMojo", "[PlcID: %s] Reach day frequency limit.", mAMView.getPlacementUid());
             return false;
         }
     }
@@ -192,7 +192,7 @@ class AMInterstitialController  extends AMController {
             }
 
         } else { //reach hour limit
-            AMLog.w("reach hour frequency limit.");
+            AMLog.w("AppMojo", "[PlcID: %s] reach hour frequency limit.", mAMView.getPlacementUid());
             return false; //needn't to show ad
         }
     }
@@ -203,7 +203,7 @@ class AMInterstitialController  extends AMController {
                 config.getSessionFrequencyCount() < config.getSessionFrequency()) { //NOT reach session limit
             return true;
         } else { //reach session limit
-            AMLog.w("Reach session frequency limit.");
+            AMLog.w("AppMojo", "[PlcID: %s] Reach session frequency limit.", mAMView.getPlacementUid());
             return false;
         }
     }
