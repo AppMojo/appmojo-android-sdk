@@ -41,6 +41,11 @@ class AMInterstitialController extends AMController {
     }
 
     @Override
+    public boolean hasApplyConfiguration() {
+        return getConfiguration() != null;
+    }
+
+    @Override
     public void loadAd(AMAdRequest adRequest) {
         AMLog.d("AppMojo", "[PlcID: %s] load interstitial ad...", mAMInterstitial.getPlacementUid());
         //sometime user call multiple time
@@ -108,7 +113,6 @@ class AMInterstitialController extends AMController {
             if(isAllowToShow()) {
                 AMLog.d("AppMojo", "[PlcID: %s] show interstitial ad...", mAMView.getPlacementUid());
                 mCustomInterstitial.show();
-                increaseFrequencyCapAndSave();
             } else {
                 AMLog.d("AppMojo", "[PlcID: %s] Interstitial ad not allow to show.", mAMView.getPlacementUid());
             }
@@ -245,8 +249,11 @@ class AMInterstitialController extends AMController {
     }
 
     private AMInterstitialConfiguration getConfiguration() {
-        return (AMInterstitialConfiguration) AMAppEngine.getInstance()
-                .getConfiguration(AMAdType.INTERSTITIAL, mAMInterstitial.getPlacementUid());
+        if(mAMInterstitial != null) {
+            return (AMInterstitialConfiguration) AMAppEngine.getInstance()
+                    .getConfiguration(AMAdType.INTERSTITIAL, mAMInterstitial.getPlacementUid());
+        }
+        return null;
     }
 
 
@@ -280,6 +287,9 @@ class AMInterstitialController extends AMController {
 
         @Override
         public void onCustomInterstitialShown() {
+            // increase Frequency Cap
+            increaseFrequencyCapAndSave();
+
             //log session
             AMAppEngine.getInstance().logSession();
 

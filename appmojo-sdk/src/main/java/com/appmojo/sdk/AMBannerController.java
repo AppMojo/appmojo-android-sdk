@@ -34,6 +34,10 @@ class AMBannerController extends AMController {
         return 0;
     }
 
+    @Override
+    public boolean hasApplyConfiguration() {
+        return  getConfiguration() != null;
+    }
 
     @Override
     public void loadAd(AMAdRequest adRequest) {
@@ -105,14 +109,13 @@ class AMBannerController extends AMController {
         }
     }
 
-
     @SuppressWarnings("ResourceType")
     private void applyAutoHideView(boolean isHide) {
         if(mBannerView != null && mBannerView.isAutoHideView()) {
             if(isHide) {
-                mBannerView.setVisibility(View.GONE);
+                mBannerView.setVisibilityByController(View.GONE);
             } else {
-                mBannerView.setVisibility(mBannerView.getUserSelectedVisibility());
+                mBannerView.setVisibilityByController(mBannerView.getUserSelectedVisibility());
             }
         }
     }
@@ -165,9 +168,11 @@ class AMBannerController extends AMController {
 
 
     private AMBannerConfiguration getConfiguration() {
-        return (AMBannerConfiguration) mAppEngine.getConfiguration(
-                AMAdType.BANNER, mBannerView.getPlacementUid());
-
+        if(mBannerView != null) {
+            return (AMBannerConfiguration) mAppEngine.getConfiguration(
+                    AMAdType.BANNER, mBannerView.getPlacementUid());
+        }
+        return null;
     }
 
 

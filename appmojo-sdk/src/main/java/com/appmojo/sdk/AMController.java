@@ -81,6 +81,7 @@ abstract class AMController {
     }
 
     //Sub class implement
+    public abstract boolean hasApplyConfiguration();
     public abstract void loadAd(AMAdRequest adRequest);
     public abstract void  onVisibilityChanged(int isibility);
     public abstract void reloadAd();

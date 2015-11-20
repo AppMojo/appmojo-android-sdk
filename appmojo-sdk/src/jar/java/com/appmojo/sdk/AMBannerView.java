@@ -25,6 +25,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private Context mContext;
     private boolean mShouldAutoHide;
     private int mUserSelectedVisibility = VISIBLE;
+    private boolean isSetByController = false;
 
     public AMBannerView(Context context) {
         super(context);
@@ -117,9 +118,21 @@ public class AMBannerView extends ViewGroup implements AMView {
         mAMController.loadAd(adRequest);
     }
 
+    void setVisibilityByController(int visibility) {
+        isSetByController = true;
+        setVisibility(visibility);
+        isSetByController = false;
+    }
+
     @Override
     public void setVisibility(int visibility) {
-        mUserSelectedVisibility = visibility;
+        if(!isSetByController) {
+            mUserSelectedVisibility = visibility;
+        }
+
+        if (isAutoHideView() && !mAMController.hasApplyConfiguration()) {
+            visibility = GONE;
+        }
         super.setVisibility(visibility);
     }
 

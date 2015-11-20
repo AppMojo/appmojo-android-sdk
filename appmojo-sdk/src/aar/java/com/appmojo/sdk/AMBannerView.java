@@ -25,7 +25,8 @@ public class AMBannerView extends ViewGroup implements AMView {
     private int mAdSize = AMAdSize.BANNER;
     private Context mContext;
     private boolean mShouldAutoHide;
-    private int mUserSelectedVisibility = VISIBLE;
+    private int mUserSelectedVisibility;
+    private boolean isSetByController = false;
 
     public AMBannerView(Context context) {
         super(context);
@@ -46,6 +47,7 @@ public class AMBannerView extends ViewGroup implements AMView {
     private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
         mContext = context;
         mShouldAutoHide = true;
+        mUserSelectedVisibility = this.getVisibility(); //up to user set visibility view
         if (!isInEditMode()) {
             mAMController = AMViewControllerFactory.create(mContext, this, AMAdType.BANNER);
         }
@@ -118,9 +120,21 @@ public class AMBannerView extends ViewGroup implements AMView {
         mAMController.loadAd(adRequest);
     }
 
+    void setVisibilityByController(int visibility) {
+        isSetByController = true;
+        setVisibility(visibility);
+        isSetByController = false;
+    }
+
     @Override
     public void setVisibility(int visibility) {
-        mUserSelectedVisibility = visibility;
+        if(!isSetByController) {
+            mUserSelectedVisibility = visibility;
+        }
+
+        if (isAutoHideView() && !mAMController.hasApplyConfiguration()) {
+            visibility = GONE;
+        }
         super.setVisibility(visibility);
     }
 
