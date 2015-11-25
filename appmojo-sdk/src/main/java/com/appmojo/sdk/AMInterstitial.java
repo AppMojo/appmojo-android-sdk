@@ -1,13 +1,24 @@
 package com.appmojo.sdk;
 
 import android.content.Context;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.appmojo.sdk.base.AMAdNetwork;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 
 public class AMInterstitial implements AMView {
     private static final String TAG = "AMInterstitial";
+
+    @IntDef({DAY, HOUR, SESSION})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface FrequencyCap {}
+    public static final int DAY = 0;
+    public static final int HOUR = 1;
+    public static final int SESSION = 2;
 
     private final AMController mAMController;
     private String mPlacementUid;

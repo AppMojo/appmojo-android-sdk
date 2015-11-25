@@ -1,7 +1,6 @@
 package com.sample.appmojo.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +21,6 @@ public class AMInterstitialActivity extends Activity {
     private boolean isCallLoadAd = true;
     private Button mReloadBtn;
     private Button mShowAdBtn;
-    private Button mNextPageBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,6 @@ public class AMInterstitialActivity extends Activity {
 
         mReloadBtn = (Button) findViewById(R.id.interAd_refresh_btn);
         mShowAdBtn = (Button) findViewById(R.id.interAd_show_btn);
-        mNextPageBtn = (Button) findViewById(R.id.interAd_next_btn);
 
         setupInterstitialAd();
         setupButtonSate(isCallLoadAd);
@@ -57,7 +54,6 @@ public class AMInterstitialActivity extends Activity {
     private void setupButtonSate(boolean isLoadAd) {
         mReloadBtn.setEnabled(!isLoadAd);
         mShowAdBtn.setEnabled(isLoadAd);
-        mNextPageBtn.setEnabled(isLoadAd);
     }
 
     public void onClickBtn(View v) {
@@ -71,12 +67,6 @@ public class AMInterstitialActivity extends Activity {
                 isCallLoadAd = false;
                 onClickShowInterstitialAd(mInterstitialAd);
                 break;
-
-            case R.id.interAd_next_btn:
-                isCallLoadAd = false;
-                onClickGotoNextPage(mInterstitialAd);
-                break;
-
             default:
                 break;
         }
@@ -90,19 +80,6 @@ public class AMInterstitialActivity extends Activity {
             Toast.makeText(getApplicationContext(), interstitial.getCurrentAdUnitId(), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(),  "InterstitialAd not ready to show!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private void onClickGotoNextPage(AMInterstitial interstitial) {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.setListener(mListener);
-            mInterstitialAd.show();
-            Toast.makeText(getApplicationContext(), interstitial.getCurrentAdUnitId(), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "InterstitialAd not ready to show!", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(), AMBannerActivity.class);
-            startActivity(intent);
         }
     }
 
@@ -122,10 +99,11 @@ public class AMInterstitialActivity extends Activity {
         @Override
         public void onAdClosed(AMInterstitial view) {
             Log.d(TAG, "onAdClosed...");
-            Intent intent = new Intent(getApplicationContext(), AMBannerActivity.class);
-            startActivity(intent);
-            //free listener
-            mInterstitialAd.setListener(null);
+        }
+
+        @Override
+        public void onReachedFrequencyCap(AMInterstitial view, int criteria) {
+            Log.d(TAG, "onReachedFrequencyCap...");
         }
     }
 }

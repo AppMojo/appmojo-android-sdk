@@ -7,7 +7,7 @@ import com.appmojo.sdk.utils.AMLog;
 import com.appmojo.sdk.utils.TimeUtils;
 
 
-class AMInterstitialController extends AMController {
+class AMInterstitialController  extends AMController {
     //no prefix private because it easy to test
     AMCustomInterstitialListener mCustomListener;
     private AMCustomInterstitial mCustomInterstitial;
@@ -176,6 +176,7 @@ class AMInterstitialController extends AMController {
             }
         } else { //same date but reach day limit
             AMLog.w("AppMojo", "[PlcID: %s] Reach day frequency limit.", mAMView.getPlacementUid());
+            onReachedFrequencyCap(AMInterstitial.DAY);
             return false;
         }
     }
@@ -197,6 +198,7 @@ class AMInterstitialController extends AMController {
 
         } else { //reach hour limit
             AMLog.w("AppMojo", "[PlcID: %s] reach hour frequency limit.", mAMView.getPlacementUid());
+            onReachedFrequencyCap(AMInterstitial.HOUR);
             return false; //needn't to show ad
         }
     }
@@ -208,6 +210,7 @@ class AMInterstitialController extends AMController {
             return true;
         } else { //reach session limit
             AMLog.w("AppMojo", "[PlcID: %s] Reach session frequency limit.", mAMView.getPlacementUid());
+            onReachedFrequencyCap(AMInterstitial.SESSION);
             return false;
         }
     }
@@ -254,6 +257,13 @@ class AMInterstitialController extends AMController {
                     .getConfiguration(AMAdType.INTERSTITIAL, mAMInterstitial.getPlacementUid());
         }
         return null;
+    }
+
+    public void onReachedFrequencyCap(@AMInterstitial.FrequencyCap int criteria) {
+        if(getAMView() != null && getAMView().getListener() != null) {
+            ((AMInterstitialListener)getAMView().getListener())
+                    .onReachedFrequencyCap(mAMInterstitial, criteria);
+        }
     }
 
 

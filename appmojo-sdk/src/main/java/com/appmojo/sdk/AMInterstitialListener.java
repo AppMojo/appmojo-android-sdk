@@ -10,6 +10,12 @@ public abstract class AMInterstitialListener extends AMListener {
     }
     public void onAdOpened(AMInterstitial view) {
     }
+    /**
+     * @param view Interstitial view
+     * @param criteria One of {DAY, HOUR, SESSION}.
+     */
+    public void onReachedFrequencyCap(AMInterstitial view, int criteria) {
+    }
     public void onNotApplyConfiguration(AMInterstitial view) {
     }
 }
