@@ -222,7 +222,7 @@ class AMBannerController extends AMController {
     private class AMBannerControllerListener implements AMCustomBannerListener {
         @Override
         public void onCustomBannerLoaded(View view) {
-            AMLog.i("AppMojo", "[PlcID: %s] Banner loaded...", mBannerView.getPlacementUid());
+            AMLog.i("AppMojo", "[PlcID: %s] Banner loaded..." , mBannerView.getPlacementUid());
             setContentView(view);
 
             //log session

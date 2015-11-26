@@ -2,14 +2,12 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 
-import com.appmojo.sdk.connections.AMConnectionHelper;
-import com.appmojo.sdk.connections.AMConnectionListener;
 import com.appmojo.sdk.errors.AMError;
 import com.appmojo.sdk.events.AMActivityEvent;
 import com.appmojo.sdk.events.AMEvent;
 import com.appmojo.sdk.events.AMSessionEvent;
-import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.repository.AMCriteria;
+import com.appmojo.sdk.repository.AMEventRepository;
 import com.appmojo.sdk.utils.AMLog;
 
 import org.json.JSONArray;
@@ -27,16 +25,18 @@ import java.util.TimeZone;
 
 
 class AMEventDelivery {
+
     private Context mContext;
     private AMConnectionHelper mConnectionHelper;
     private boolean isStarted;
     private int index;
     private AMEventRepository mEventRepository;
     private String mAppId;
+    private int mCurrentDeliveringEventType;
 
     public AMEventDelivery(Context context) {
         mContext = context;
-        mConnectionHelper = new AMConnectionHelper();
+        mConnectionHelper = new AMConnectionHelper(mContext);
         mAppId = AMAppEngine.getInstance().getAppId();
     }
 
@@ -54,6 +54,11 @@ class AMEventDelivery {
         }
     }
 
+    private void deliverNextEvent(){
+        mCurrentDeliveringEventType = getNextType();
+        deliver(mCurrentDeliveringEventType);
+    }
+
 
     private int getNextType() {
         int type = -1;
@@ -65,13 +70,15 @@ class AMEventDelivery {
     }
 
 
-    private void deliverNextEvent() {
-        int type = getNextType();
+    private void deliver(int type) {
         if (type == AMEvent.SESSION) {
+            AMLog.i("delete session event...");
             deliverSessionEvent();
         } else if (type == AMEvent.IMPRESSION) {
+            AMLog.i("delete impression event...");
             deliverClickEvent();
         } else if (type == AMEvent.CLICK) {
+            AMLog.i("delete click event...");
             deliverImpressEvent();
         } else { //no deliver event
             index = -1;
@@ -94,7 +101,6 @@ class AMEventDelivery {
                     if(ssEvent.getExperimentId() == null || ssEvent.getExperimentId().length() < 1) { //empty experiment ID
                         events.remove(i); //remove from delivery chuck
                         mEventRepository.delete(AMEvent.SESSION, ssEvent.getId()); //delete from data base
-                        AMLog.e("delete session id : " + ssEvent.getId());
                     }
                 }
             }
@@ -143,16 +149,22 @@ class AMEventDelivery {
 
 
     private void sendEvent(@AMEvent.Type final int type, String url, String body) {
-        Map<String, String> headers = getHeaderData();
-        mConnectionHelper.put(url, headers, body, new AMConnectionListener() {
+        AMConnectionData data = new AMConnectionData();
+        data.setUrl(url);
+        data.setMethod(AMConnectionData.PUT);
+        data.setBody(body);
+        data.setHeader(getHeaderData());
+
+        mConnectionHelper = new AMConnectionHelper(mContext);
+        mConnectionHelper.request(data, new AMConnectionHelper.AMConnectionListener() {
             @Override
-            public void onConnectionSuccess(AMConnectionResponse response) {
+            public void onConnectSuccess(AMConnectionResponse response) {
                 onDeliverSuccess(type, response);
             }
 
             @Override
-            public void onConnectionFail(AMError error) {
-                onDeliverFailed(error);
+            public void onConnectFailed(AMError error) {
+                onDeliverFailed(type, error);
             }
         });
     }
@@ -187,12 +199,22 @@ class AMEventDelivery {
         }
     }
 
-    private void onDeliverFailed(AMError error) {
+    private void onDeliverFailed(@AMEvent.Type int type, AMError error) {
         try {
+            if(type == AMEvent.SESSION) {
+                AMLog.w("Error while deliver 'session' event to server.");
+            }
+
+            if(type == AMEvent.CLICK) {
+                AMLog.w("Error while deliver 'click' event to server.");
+            }
+
+            if(type == AMEvent.IMPRESSION) {
+                AMLog.w("Error while deliver 'impression' event to server.");
+            }
+
             if(error != null) {
-                AMLog.w("Error code: " + error.getCode() + "Message: " + error.getMessage());
-            } else {
-                AMLog.w("Error while paring session response after updated.");
+                AMLog.w("Error code: " + error.getCode() + " Message: " + error.getMessage());
             }
         } finally {
             //deliver next event type
@@ -200,14 +222,12 @@ class AMEventDelivery {
         }
     }
 
-
     private Map<String, String> getHeaderData() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("Authorization", AMTokenHelper.getToken(mContext));
         return headers;
     }
-
 
     private String createSessionBody(List<AMEvent> events) {
         String body = null;
@@ -228,7 +248,6 @@ class AMEventDelivery {
         return body;
      }
 
-
     private String createActivityBody(List<AMEvent> events) {
         JSONArray jsonArray = new JSONArray();
         if(events != null) {
@@ -242,7 +261,6 @@ class AMEventDelivery {
         }
         return jsonArray.toString();
     }
-
 
     private List<AMEvent> filterInactiveActivity(List<AMEvent> events) {
         try {

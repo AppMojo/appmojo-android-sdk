@@ -17,6 +17,14 @@ public class AMBaseConfiguration {
     private AMBaseConfiguration(){
     }
 
+    public static String getAppID() {
+        return AMAppEngine.getInstance().getAppId();
+    }
+
+    public static String getAppSecret() {
+        return AMAppEngine.getInstance().getAppSecret();
+    }
+
     public static String getUrlAuthen(){
         StringBuilder builder = new StringBuilder();
         String testingServer = AMAppEngine.getInstance().isUsingDevServer() ? APPMOJO_URL_DEV : APPMOJO_URL_STAGING;

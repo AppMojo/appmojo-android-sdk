@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AMConnectionHelper {
+public class AMConnectionHandler {
 
     public static final int TASK_COMPLETE = 1;
     public static final int TASK_FAIL = -1;
@@ -16,13 +16,13 @@ public class AMConnectionHelper {
     private Handler mHandler;
     private ExecutorService mExecutor;
 
-    public AMConnectionHelper() {
+    public AMConnectionHandler() {
         mHandler = new ConnectionHandler(Looper.getMainLooper());
         mExecutor = Executors.newFixedThreadPool(1);
     }
 
 
-    public void post(String urlStr, Map<String, String> headers, String jBody, AMConnectionListener listener) {
+    public void post(String urlStr, Map<String, String> headers, String jBody, AMConnectionHandlerListener listener) {
         AMConnectionTask task = new AMConnectionTask(this);
         task.prepareTask(urlStr, "POST", headers, jBody, listener);
 
@@ -31,7 +31,7 @@ public class AMConnectionHelper {
     }
 
 
-    public void get(String urlStr, Map<String, String> headers, String jBody, AMConnectionListener listener) {
+    public void get(String urlStr, Map<String, String> headers, String jBody, AMConnectionHandlerListener listener) {
         AMConnectionTask task = new AMConnectionTask(this);
         task.prepareTask(urlStr, "GET", headers, jBody, listener);
 
@@ -40,7 +40,7 @@ public class AMConnectionHelper {
     }
 
 
-    public void put(String urlStr, Map<String, String> headers, String jBody, AMConnectionListener listener) {
+    public void put(String urlStr, Map<String, String> headers, String jBody, AMConnectionHandlerListener listener) {
         AMConnectionTask task = new AMConnectionTask(this);
         task.prepareTask(urlStr, "PUT", headers, jBody, listener);
 

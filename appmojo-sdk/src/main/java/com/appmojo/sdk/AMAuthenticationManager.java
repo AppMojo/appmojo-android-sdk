@@ -2,8 +2,8 @@ package com.appmojo.sdk;
 
 import android.content.Context;
 
-import com.appmojo.sdk.connections.AMConnectionHelper;
-import com.appmojo.sdk.connections.AMConnectionListener;
+import com.appmojo.sdk.connections.AMConnectionHandler;
+import com.appmojo.sdk.connections.AMConnectionHandlerListener;
 import com.appmojo.sdk.connections.AMResponseListener;
 import com.appmojo.sdk.errors.AMError;
 import com.appmojo.sdk.utils.AMLog;
@@ -18,11 +18,11 @@ import java.util.Map;
 class AMAuthenticationManager {
 
     private Context mContext;
-    private  AMConnectionHelper mConnectionHelper;
+    private AMConnectionHandler mConnectionHelper;
 
     public AMAuthenticationManager(Context context){
         mContext = context;
-        mConnectionHelper = new AMConnectionHelper();
+        mConnectionHelper = new AMConnectionHandler();
     }
 
     public void requestToken(String appId, String appSecret, final AMResponseListener<AMToken> listener) {
@@ -30,20 +30,19 @@ class AMAuthenticationManager {
         String body = createJsonBody(appId, appSecret);
         Map<String, String> headers = getHeaderData();
 
-        mConnectionHelper.post(urlStr, headers, body, new AMConnectionListener() {
+        mConnectionHelper.post(urlStr, headers, body, new AMConnectionHandlerListener() {
             @Override
-            public void onConnectionSuccess(AMConnectionResponse response) {
+            public void onConnectSuccess(AMConnectionResponse response) {
                 handleOnConnectionSuccess(response, listener);
             }
 
             @Override
-            public void onConnectionFail(AMError error) {
+            public void onConnectFailed(AMError error) {
                 if(listener != null)
                     listener.onFail(error);
             }
         });
     }
-
 
     private void handleOnConnectionSuccess(AMConnectionResponse response, AMResponseListener<AMToken> listener) {
         AMToken token = new AMToken();
@@ -55,19 +54,17 @@ class AMAuthenticationManager {
         } else {
             if(listener != null) {
                 AMError amError = new AMError();
-                amError.setMessage("Failed to get configuration from server, no configuration found.");
+                amError.setMessage("Failed to authenticate with server.");
                 listener.onFail(amError);
             }
         }
     }
-
 
     private Map<String, String> getHeaderData() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         return headers;
     }
-
 
     private String createJsonBody(String appId, String appSecret) {
         JSONObject jsonObject = new JSONObject();

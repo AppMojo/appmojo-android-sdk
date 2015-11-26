@@ -9,8 +9,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class AMConnectionTask {
 
-    private AMConnectionHelper mConnectionHelper;
-    private AMConnectionListener listener;
+    private AMConnectionHandler mConnectionHelper;
+    private AMConnectionHandlerListener listener;
     private Map<String, String> headers;
     private String urlStr;
     private String body;
@@ -19,12 +19,12 @@ public class AMConnectionTask {
     private AMConnectionResponse mConnectionResponse;
 
 
-    public AMConnectionTask(AMConnectionHelper connectionHelper) {
+    public AMConnectionTask(AMConnectionHandler connectionHelper) {
         mConnectionHelper = connectionHelper;
     }
 
 
-    public void prepareTask(String urlStr, String method, Map<String, String> headers, String body, AMConnectionListener listener) {
+    public void prepareTask(String urlStr, String method, Map<String, String> headers, String body, AMConnectionHandlerListener listener) {
         this.urlStr = urlStr;
         this.body = body;
         this.method = method;
@@ -53,7 +53,7 @@ public class AMConnectionTask {
     }
 
 
-    public AMConnectionListener getListener() {
+    public AMConnectionHandlerListener getListener() {
         return listener;
     }
 
@@ -73,30 +73,29 @@ public class AMConnectionTask {
         if(response == null) {
             AMError amError = new AMError();
             amError.setMessage("parsing error failed when connecting with server.");
-            listener.onConnectionFail(amError);
+            listener.onConnectFailed(amError);
             return;
         }
 
         if(response.getStatusCode() == HttpsURLConnection.HTTP_OK) {
-            listener.onConnectionSuccess(response);
+            listener.onConnectSuccess(response);
         } else {
-            AMError amError = new AMError();
-            amError = amError.parse(response.getResponse());
+            AMError amError = new AMError().parse(response.getResponse());
             if (amError == null) {
                 amError = new AMError();
                 amError.setMessage(response.getResponse());
             }
             amError.setHttpStatusCode(response.getStatusCode());
-            listener.onConnectionFail(amError);
+            listener.onConnectFailed(amError);
         }
     }
 
 
     public void handleConnectionState(int state) {
-        int outState = AMConnectionHelper.TASK_FAIL;
+        int outState = AMConnectionHandler.TASK_FAIL;
         // Converts the decode state to the overall state.
         if (state == AMConnectionThread.CONNECT_STATE_COMPLETED) {
-            outState = AMConnectionHelper.TASK_COMPLETE;
+            outState = AMConnectionHandler.TASK_COMPLETE;
 
         }
         // Calls the generalized state method

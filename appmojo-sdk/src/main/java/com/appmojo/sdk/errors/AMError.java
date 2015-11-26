@@ -113,10 +113,10 @@ public class AMError implements AMJsonParser<AMError>{
         return new StringBuffer()
                 .append("httpStatusCode: ")
                 .append(httpStatusCode)
-                .append("\n")
+                .append(", ")
                 .append("Error: ")
                 .append(code)
-                .append("\n")
+                .append(", ")
                 .append("Msg: ")
                 .append(message).toString();
     }

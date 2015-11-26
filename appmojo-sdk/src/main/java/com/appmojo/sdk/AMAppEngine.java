@@ -84,7 +84,7 @@ class AMAppEngine implements AMEventTriggerListener {
         prepareActivityTracker(mContext);
 
         //start process
-        requestToken(mAppId, mAppSecret, ToKenStep.REQUEST_TOKEN);
+        requestToken(ToKenStep.REQUEST_TOKEN);
     }
 
 
@@ -159,36 +159,14 @@ class AMAppEngine implements AMEventTriggerListener {
         return null;
     }
 
-
     public void saveConfiguration() {
         if (mConfigurationManager != null && mConfigurationManager.getConfiguration() != null) {
             mConfigurationManager.getConfiguration().save(mContext);
         }
     }
 
-
-    public void refreshToken(final AMRefreshTokenListener listener) {
+    private void requestToken(final ToKenStep step) {
         mAuthenManager.requestToken(mAppId, mAppSecret, new AMResponseListener<AMToken>() {
-
-            @Override
-            public void onSuccess(AMToken token) {
-                AMLog.d("Refresh token succeed.");
-                if(listener != null)
-                    listener.onRefreshTokenSuccess();
-            }
-
-            @Override
-            public void onFail(AMError error) {
-                AMLog.d("Refresh token failed.");
-                if(listener != null)
-                    listener.onRefreshTokenFail();
-            }
-        });
-    }
-
-
-    private void requestToken(String appId, String appSecretKey, final ToKenStep step) {
-        mAuthenManager.requestToken(appId, appSecretKey, new AMResponseListener<AMToken>() {
             @Override
             public void onSuccess(AMToken token) {
                 AMLog.d("Authentication succeed.");
