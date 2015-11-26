@@ -4,8 +4,6 @@
 
     <string name="label_reload">Reload</string>
     <string name="label_show_ad">Show Ad</string>
-    <string name="label_next_page">Next Page</string>
-
 
     <!--Ads-->
     <string name="app_id" tools:ignore="TypographyDashes">YOUR-APP-ID</string>
