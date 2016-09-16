@@ -11,7 +11,7 @@ android {
         exclude 'LICENSE.txt'
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.1"
 
     defaultConfig {
@@ -19,7 +19,7 @@ android {
 
         applicationId "net.appsynth.appmojoandroidsdk"
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -35,7 +35,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.google.android.gms:play-services-ads:8.1.0'
     compile project(':appmojo-sdk')
 
@@ -57,7 +57,7 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-core:1.1'
     testCompile 'org.hamcrest:hamcrest-library:1.1'
     testCompile 'org.hamcrest:hamcrest-integration:1.1'
-    androidTestCompile 'com.android.support:support-v4:23.1.0'
+    androidTestCompile 'com.android.support:support-v4:24.2.0'
 
 
 

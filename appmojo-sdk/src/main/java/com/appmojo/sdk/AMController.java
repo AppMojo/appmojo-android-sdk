@@ -72,7 +72,6 @@ abstract class AMController {
     }
 
     public void onDestroy() {
-        AMLog.d("onDestroy controller...");
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mMessageReceiver);
         mAppEngine = null;
         mContext = null;

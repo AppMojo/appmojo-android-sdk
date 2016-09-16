@@ -228,7 +228,6 @@ class AMAppEngine implements AMEventTriggerListener {
      */
     @Override
     public void onTriggerDelivery() {
-        AMLog.d("Delivery events....");
         mEventDelivery.startDeliverEvent();
     }
 

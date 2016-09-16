@@ -25,7 +25,6 @@ import java.util.TimeZone;
 
 
 class AMEventDelivery {
-
     private Context mContext;
     private AMConnectionHelper mConnectionHelper;
     private boolean isStarted;
@@ -40,11 +39,9 @@ class AMEventDelivery {
         mAppId = AMAppEngine.getInstance().getAppId();
     }
 
-
     public void setEventRepository(AMEventRepository repository) {
         mEventRepository = repository;
     }
-
 
     public synchronized void startDeliverEvent() {
         if(!isStarted) {
@@ -59,7 +56,6 @@ class AMEventDelivery {
         deliver(mCurrentDeliveringEventType);
     }
 
-
     private int getNextType() {
         int type = -1;
         index++;
@@ -69,23 +65,18 @@ class AMEventDelivery {
         return type;
     }
 
-
     private void deliver(int type) {
         if (type == AMEvent.SESSION) {
-            AMLog.i("delete session event...");
             deliverSessionEvent();
         } else if (type == AMEvent.IMPRESSION) {
-            AMLog.i("delete impression event...");
-            deliverClickEvent();
-        } else if (type == AMEvent.CLICK) {
-            AMLog.i("delete click event...");
             deliverImpressEvent();
+        } else if (type == AMEvent.CLICK) {
+            deliverClickEvent();
         } else { //no deliver event
             index = -1;
             isStarted = false;
         }
     }
-
 
     private void deliverSessionEvent() {
         List<AMEvent> events = mEventRepository.get(AMEvent.SESSION);
@@ -111,7 +102,6 @@ class AMEventDelivery {
             } else {
                 deliverNextEvent();
             }
-
         } else {
             deliverNextEvent();
         }
@@ -147,7 +137,6 @@ class AMEventDelivery {
         }
     }
 
-
     private void sendEvent(@AMEvent.Type final int type, String url, String body) {
         AMConnectionData data = new AMConnectionData();
         data.setUrl(url);
@@ -171,7 +160,6 @@ class AMEventDelivery {
 
     private void onDeliverSuccess(@AMEvent.Type int type, AMConnectionResponse response) {
         try {
-            AMLog.i(response.toString());
             JSONArray jsonArray = new JSONArray(response.getResponse());
             AMCriteria criteria = null;
             for(int i = 0 ; i < jsonArray.length() ; i++) {
@@ -200,26 +188,10 @@ class AMEventDelivery {
     }
 
     private void onDeliverFailed(@AMEvent.Type int type, AMError error) {
-        try {
-            if(type == AMEvent.SESSION) {
-                AMLog.w("Error while deliver 'session' event to server.");
-            }
-
-            if(type == AMEvent.CLICK) {
-                AMLog.w("Error while deliver 'click' event to server.");
-            }
-
-            if(type == AMEvent.IMPRESSION) {
-                AMLog.w("Error while deliver 'impression' event to server.");
-            }
-
-            if(error != null) {
-                AMLog.w("Error code: " + error.getCode() + " Message: " + error.getMessage());
-            }
-        } finally {
-            //deliver next event type
-            deliverNextEvent();
+        if(error != null) {
+            AMLog.w("Error code: " + error.getCode() + " Message: " + error.getMessage());
         }
+        deliverNextEvent();
     }
 
     private Map<String, String> getHeaderData() {

@@ -1,22 +1,26 @@
 apply plugin: 'com.android.library'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('gradle.properties').newDataInputStream())
+
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'appmojo-sdk'
+    bintrayRepo = properties.getProperty("bintrayRepo")
+    bintrayName = properties.getProperty("bintrayName")
 
-    publishedGroupId = 'com.appmojo'
-    libraryName = 'AppMojo-SDK'
-    artifact = 'appmojo-sdk'
+    publishedGroupId = properties.getProperty("publishedGroupId")
+    libraryName = properties.getProperty("libraryName")
+    artifact = properties.getProperty("artifact")
 
-    libraryDescription = 'A library for advertisement A/B testing on Android'
+    libraryDescription = properties.getProperty("libraryDescription")
 
-    siteUrl = 'https://github.com/AppMojo/appmojo-android-sdk'
-    gitUrl = 'https://github.com/AppMojo/appmojo-android-sdk.git'
+    siteUrl = properties.getProperty("siteUrl")
+    gitUrl = properties.getProperty("gitUrl")
 
-    libraryVersion = '0.0.19'
+    libraryVersion = properties.getProperty("libraryVersion")
 
-    developerId = 'nutron-appsynth'
-    developerName = 'Watcharin Sripongpunkul'
-    developerEmail = 'new@appsynth.net'
+    developerId = properties.getProperty("developerId")
+    developerName = properties.getProperty("developerName")
+    developerEmail = properties.getProperty("developerEmail")
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
@@ -26,14 +30,14 @@ ext {
 android {
     defaultPublishConfig "aarRelease"
 
-    compileSdkVersion 22
+    compileSdkVersion 24
     buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 22
+        targetSdkVersion 24
         versionCode 19
-        versionName "0.0.19"
+        versionName properties.getProperty("libraryVersion")
     }
     buildTypes {
         release {
@@ -61,7 +65,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.0'
 }
 
 apply from: '../install.gradle'

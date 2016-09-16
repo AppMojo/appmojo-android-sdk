@@ -41,7 +41,7 @@ class AMBannerController extends AMController {
 
     @Override
     public void loadAd(AMAdRequest adRequest) {
-        AMLog.d("AppMojo", "[PlcID: %s] load banner ad...", mAMView.getPlacementUid());
+        AMLog.d(AMLog.TAG, "[PlcID: %s] load banner ad...", mAMView.getPlacementUid());
         mAdRequest = adRequest;
         String className = null;
 
@@ -55,7 +55,7 @@ class AMBannerController extends AMController {
                 mCustomBanner = AMCustomBannerFactory.create(className);
             } catch (Exception e) {
                 mCustomAdRequest = null;
-                AMLog.w("AppMojo", "AppMojo cannot find class %s, make sure you add it to SDK module.", className);
+                AMLog.w(AMLog.TAG, "AppMojo cannot find class %s, make sure you add it to SDK module.", className);
             }
         }
 
@@ -71,7 +71,7 @@ class AMBannerController extends AMController {
 
     @Override
     public void reloadAd() {
-        AMLog.d("AppMojo", "[PlcID: %s] reload banner ad...", mBannerView.getPlacementUid());
+        AMLog.d(AMLog.TAG, "[PlcID: %s] reload banner ad...", mBannerView.getPlacementUid());
         if (mCustomAdRequest != null && mCustomAdRequest instanceof AMBannerAdRequest) {
             ((AMBannerAdRequest)mCustomAdRequest).setAdSize(mBannerView.getAdSize());
         }
@@ -82,19 +82,19 @@ class AMBannerController extends AMController {
 
     @Override
     protected void applyAdRequest(AMCustomAdRequest adRequest) {
-        AMLog.d("AppMojo", "[PlcID: %s] apply banner configuration...", mBannerView.getPlacementUid());
+        AMLog.d(AMLog.TAG, "[PlcID: %s] apply banner configuration...", mBannerView.getPlacementUid());
         if(mCustomBanner != null && adRequest != null) {
             applyAutoHideView(false);
             if(mVisibility == View.VISIBLE) {
                 mCustomBanner.loadBanner(mContext, mCustomListener, (AMBannerAdRequest) adRequest);
             } else {
-                AMLog.w("AppMojo", "[PlcID: %s] Banner is not visible. Not refreshing ad.", mAMView.getPlacementUid());
+                AMLog.w(AMLog.TAG, "[PlcID: %s] Banner is not visible. Not refreshing ad.", mAMView.getPlacementUid());
             }
             scheduleRefreshTime((AMBannerAdRequest)adRequest);
 
         } else {
             if(mAMView != null) {
-                AMLog.w("AppMojo", "[PlcID: %s] No configuration to be applied. ", mAMView.getPlacementUid());
+                AMLog.w(AMLog.TAG, "[PlcID: %s] No configuration to be applied. ", mAMView.getPlacementUid());
             }
             notifyNotApplyConfiguration();
             applyAutoHideView(true);
@@ -123,7 +123,7 @@ class AMBannerController extends AMController {
 
     private void setContentView(View bannerView) {
         if(mBannerView != null && bannerView != null) {
-            AMLog.d("AppMojo", "[PlcID: %s] display banner ad... ", mAMView.getPlacementUid());
+            AMLog.d(AMLog.TAG, "[PlcID: %s] display banner ad... ", mAMView.getPlacementUid());
             mBannerView.removeAllViews();
             mBannerView.addView(bannerView);
         }
@@ -184,11 +184,11 @@ class AMBannerController extends AMController {
             if(mRefreshRunnable == null) {
                 mRefreshRunnable = createRunnable(adRequest);
             }
-            AMLog.d("AppMojo", "[PlcID: %s] Scheduling ad refresh %s seconds from now.",
+            AMLog.d(AMLog.TAG, "[PlcID: %s] Scheduling ad refresh %s seconds from now.",
                     mBannerView.getPlacementUid(), refreshRate);
             mHandler.postDelayed(mRefreshRunnable, refreshRate * 1000);
         } else {
-            AMLog.d("AppMojo", "[PlcID: %s] Not scheduling refresh ad.", mBannerView.getPlacementUid());
+            AMLog.d(AMLog.TAG, "[PlcID: %s] Not scheduling refresh ad.", mBannerView.getPlacementUid());
         }
     }
 
@@ -197,7 +197,7 @@ class AMBannerController extends AMController {
         return new Runnable() {
             @Override
             public void run() {
-                AMLog.d("re-apply configuration...");
+                AMLog.d(AMLog.TAG, "[PlcID: %s] re-apply configuration...", mBannerView.getPlacementUid());
                 applyAdRequest(adRequest);
             }
         };
@@ -205,7 +205,6 @@ class AMBannerController extends AMController {
 
 
     private void cancelRefreshTime() {
-        AMLog.d("Cancel refresh ad timer.");
         if(mHandler != null) {
             mHandler.removeCallbacks(mRefreshRunnable);
         }
@@ -218,11 +217,10 @@ class AMBannerController extends AMController {
     //   _| |_| |\ | | |\ | |  __/|   /| |___| | (_)  \ \__ \\__ \
     //  |_____|_| \__|_| \__|\___||__|  \____|_|\___/|_\|___/|___/
 
-
     private class AMBannerControllerListener implements AMCustomBannerListener {
         @Override
         public void onCustomBannerLoaded(View view) {
-            AMLog.i("AppMojo", "[PlcID: %s] Banner loaded..." , mBannerView.getPlacementUid());
+            AMLog.i(AMLog.TAG, "[PlcID: %s] Banner loaded..." , mBannerView.getPlacementUid());
             setContentView(view);
 
             //log session
@@ -230,7 +228,6 @@ class AMBannerController extends AMController {
 
             //log activity
             if(mAMView != null && mVisibility == View.VISIBLE) {
-                AMLog.i("AppMojo", "[PlcID: %s] Banner log IMPRESSION activity...", mBannerView.getPlacementUid());
                 logActivity(AMEvent.IMPRESSION);
             }
 
@@ -247,7 +244,7 @@ class AMBannerController extends AMController {
             AMAppEngine.getInstance().logSession();
 
             if(mBannerView != null) {
-                AMLog.i("AppMojo", "[PlcID: %s] Banner failed to load.", mBannerView.getPlacementUid());
+                AMLog.i(AMLog.TAG, "[PlcID: %s] Banner failed to load.", mBannerView.getPlacementUid());
             }
             if(getAMView() != null && getAMView().getListener() != null) {
                 ((AMBannerListener)getAMView().getListener()).onAdFailed(mBannerView, errCode);
@@ -263,7 +260,7 @@ class AMBannerController extends AMController {
 
         @Override
         public void onCustomBannerOpened() {
-            AMLog.i("AppMojo", "[PlcID: %s] Banner clicked...", mBannerView.getPlacementUid());
+            AMLog.i(AMLog.TAG, "[PlcID: %s] Banner clicked...", mBannerView.getPlacementUid());
 
             //log session
             AMAppEngine.getInstance().logSession();

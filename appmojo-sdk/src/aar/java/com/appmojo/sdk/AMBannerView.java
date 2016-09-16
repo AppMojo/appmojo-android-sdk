@@ -140,7 +140,8 @@ public class AMBannerView extends ViewGroup implements AMView {
 
     @Override
     protected void onVisibilityChanged(View changedView, int visibility) {
-        mAMController.onVisibilityChanged(visibility);
+        if(mAMController != null)
+            mAMController.onVisibilityChanged(visibility);
     }
 
     @Override

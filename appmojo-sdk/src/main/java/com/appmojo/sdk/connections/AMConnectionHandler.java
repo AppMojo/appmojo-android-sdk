@@ -21,7 +21,6 @@ public class AMConnectionHandler {
         mExecutor = Executors.newFixedThreadPool(1);
     }
 
-
     public void post(String urlStr, Map<String, String> headers, String jBody, AMConnectionHandlerListener listener) {
         AMConnectionTask task = new AMConnectionTask(this);
         task.prepareTask(urlStr, "POST", headers, jBody, listener);
@@ -29,7 +28,6 @@ public class AMConnectionHandler {
         Runnable worker = new AMConnectionThread(task);
         mExecutor.execute(worker);
     }
-
 
     public void get(String urlStr, Map<String, String> headers, String jBody, AMConnectionHandlerListener listener) {
         AMConnectionTask task = new AMConnectionTask(this);
@@ -39,7 +37,6 @@ public class AMConnectionHandler {
         mExecutor.execute(worker);
     }
 
-
     public void put(String urlStr, Map<String, String> headers, String jBody, AMConnectionHandlerListener listener) {
         AMConnectionTask task = new AMConnectionTask(this);
         task.prepareTask(urlStr, "PUT", headers, jBody, listener);
@@ -47,7 +44,6 @@ public class AMConnectionHandler {
         Runnable worker = new AMConnectionThread(task);
         mExecutor.execute(worker);
     }
-
 
     // Handle status messages from tasks
     public void handleState(AMConnectionTask connTask, int state) {
@@ -57,7 +53,6 @@ public class AMConnectionHandler {
             completeMessage.sendToTarget();
         }
     }
-
 
     public void  shutdownAllTask() {
         if(mExecutor != null)

@@ -7,7 +7,7 @@ import android.util.Log;
  */
 @SuppressWarnings("ALL")
 public class AMLog {
-    private static final String TAG = "AppMojo";
+    public static final String TAG = "AppMojo";
     private static boolean LOG_VERBOSE = true;
     private static boolean LOG_DEBUG = true;
     private static boolean LOG_INFO = true;
